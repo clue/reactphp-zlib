@@ -2,6 +2,10 @@
 
 class FunctionalExamplesTest extends TestCase
 {
+    public function setUp()
+    {
+        if (defined('HHVM_VERSION')) $this->markTestSkipped('Not supported on HHVM (ignores window size / encoding format)');
+    }
     public function testChain()
     {
         $in = 'hello world';
