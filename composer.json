@@ -1,0 +1,27 @@
+{
+    "name": "clue/zlib-react",
+    "description": "Streaming zlib compressor and decompressor, supporting GZIP format (RFC 1952), raw DEFLATE format (RFC 1951) and ZLIB format (RFC 1950)",
+    "keywords": ["zlib", "gzip", "gz", "deflate", "inflate", "compression", "decompression", "RFC 1950", "RFC 1951", "RFC 1952", "reactphp"],
+    "homepage": "https://github.com/clue/php-zlib-react",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Christian Lück",
+            "email": "christian@lueck.tv"
+        }
+    ],
+    "require": {
+        "php": ">=5.3",
+        "react/stream": "~0.4.3",
+        "clue/stream-filter": "~1.3"
+    },
+    "require-dev": {
+        "react/event-loop": "~0.4.0|~0.3.0"
+    },
+    "suggest": {
+        "ext-zlib": "Requires ext-zlib extension"
+    },
+    "autoload": {
+        "psr-4": { "Clue\\React\\Zlib\\": "src/" }
+    }
+}
