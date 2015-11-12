@@ -7,7 +7,7 @@ supporting compression and decompression of the following formats:
 * [RFC 1951](https://tools.ietf.org/html/rfc1951) (raw DEFLATE compressed format)
 * [RFC 1950](https://tools.ietf.org/html/rfc1950) (ZLIB compressed format)
 
-> Note: This project is in early alpha stage! Feel free to report any issues you encounter.
+> Note: This project is in beta stage! Feel free to report any issues you encounter.
 
 **Table of contents**
 
@@ -150,7 +150,7 @@ The recommended way to install this library is [through composer](https://getcom
 [New to composer?](https://getcomposer.org/doc/00-intro.md)
 
 ```bash
-$ composer require clue/zlib-react:dev-master
+$ composer require clue/zlib-react:~0.1.0
 ```
 
 ## License
