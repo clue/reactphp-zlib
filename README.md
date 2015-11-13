@@ -23,6 +23,7 @@ supporting compression and decompression of the following formats:
     * [Inconsistencies](#inconsistencies)
 * [Install](#install)
 * [License](#license)
+* [More](#more)
 
 ## Quickstart example
 
@@ -156,3 +157,10 @@ $ composer require clue/zlib-react:~0.1.0
 ## License
 
 MIT
+
+## More
+
+* If you want to learn more about processing streams of data, refer to the documentation of
+  the underlying [react/stream](https://github.com/reactphp/stream) component
+* If you want to process compressed tarballs (`.tar.gz` and `.tgz` file extension), you may
+  want to use [clue/tar-react](https://github.com/clue/php-tar-react) on the decompressed stream.
