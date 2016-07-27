@@ -58,8 +58,8 @@ The zlib library offers a number of different formats (sometimes referred to as 
 This library supports the GZIP compression format as defined in [RFC 1952](https://tools.ietf.org/html/rfc1952).
 This is one of the more common compression formats and is used in several places:
 
-* PHP: `gzencode()` and `gzencode()` (PHP 5.4+ only)
-* Files with `.gz` file extension, `.tar.gz` or `.tgz` archives (tarballs)
+* PHP: `gzdecode()` (PHP 5.4+ only) and `gzencode()`
+* Files with `.gz` file extension, e.g. `.tar.gz` or `.tgz` archives (also known as "tarballs")
 * `gzip` and `gunzip` (and family) command line tools
 * [HTTP compression](https://en.wikipedia.org/wiki/HTTP_compression) with `Content-Encoding: gzip` header
 * Java: `GZIPOutputStream`
@@ -99,7 +99,7 @@ Technically, this format uses [raw DEFLATE compression](#raw-deflate-format) wra
 ```
 
 > Note: This format is often referred to as the "deflate format" or "deflate encoding".
-This documentation avoid this naming in order to avoid confusion with the [raw DEFLATE format](#raw-deflate-format).
+This documentation avoids this name in order to avoid confusion with the [raw DEFLATE format](#raw-deflate-format).
 
 ## Usage
 
