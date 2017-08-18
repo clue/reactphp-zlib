@@ -17,7 +17,7 @@
     },
     "require-dev": {
         "react/event-loop": "~0.4.0|~0.3.0",
-        "phpunit/phpunit": "^4.8"
+        "phpunit/phpunit": "^5.0 || ^4.8"
     },
     "suggest": {
         "ext-zlib": "Requires ext-zlib extension"
