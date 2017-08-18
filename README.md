@@ -22,6 +22,7 @@ supporting compression and decompression of the following formats:
     * [createDecompressor()](#createdecompressor)
     * [Inconsistencies](#inconsistencies)
 * [Install](#install)
+* [Tests](#tests)
 * [License](#license)
 * [More](#more)
 
@@ -152,6 +153,21 @@ The recommended way to install this library is [through composer](https://getcom
 
 ```bash
 $ composer require clue/zlib-react:~0.1.0
+```
+
+## Tests
+
+To run the test suite, you first need to clone this repo and then install all
+dependencies [through Composer](https://getcomposer.org):
+
+```bash
+$ composer install
+```
+
+To run the test suite, go to the project root and run:
+
+```bash
+$ php vendor/bin/phpunit
 ```
 
 ## License
