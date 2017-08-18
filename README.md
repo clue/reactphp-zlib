@@ -34,7 +34,7 @@ each individual file chunk:
 
 ```php
 $loop = React\EventLoop\Factory::create();
-$stream = new Stream(fopen('access.log.gz', 'r'), $loop);
+$stream = new React\Stream\ReadableResourceStream(fopen('access.log.gz', 'r'), $loop);
 
 $decompressor = ZlibFilterStream::createGzipDecompressor();
 
@@ -141,7 +141,6 @@ These inconsistencies exist in the underlying PHP engines and there's little we 
 * PHP 7 only: Compressing an empty string does not emit any data (not a valid compression stream)
 * HHVM only: does not currently support the GZIP and ZLIB format at all (and does not raise an error)
 * HHVM only: The [`zlib.deflate` filter function](https://github.com/facebook/hhvm/blob/fee8ae39ce395c7b9b8910dfde6f22a7745aea83/hphp/system/php/stream/default-filters.php#L77) buffers the whole string. This means that compressing a stream of 100 MB actually stores the whole string in memory before invoking the underlying compression algorithm.
-* PHP 5.3 only: Tends to SEGFAULT occasionally on shutdown?
 
 Our test suite contains several test cases that exhibit these issues.
 If you feel some test case is missing or outdated, we're happy to accept PRs! :)
