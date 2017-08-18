@@ -20,7 +20,7 @@ class TransformStream extends EventEmitter implements DuplexStreamInterface
     public function write($data)
     {
         if (!$this->writable || $data === '') {
-            return;
+            return false;
         }
 
         try {
@@ -57,7 +57,7 @@ class TransformStream extends EventEmitter implements DuplexStreamInterface
         $this->readable = false;
         $this->writable = false;
 
-        $this->emit('close', array($this));
+        $this->emit('close');
     }
 
     public function isReadable()
@@ -98,10 +98,10 @@ class TransformStream extends EventEmitter implements DuplexStreamInterface
      */
     protected function forwardData($data)
     {
-        if (!$this->readable && $data !== '') {
+        if (!$this->readable) {
             return;
         }
-        $this->emit('data', array($data, $this));
+        $this->emit('data', array($data));
     }
 
     /**
@@ -121,7 +121,7 @@ class TransformStream extends EventEmitter implements DuplexStreamInterface
         $this->readable = false;
         $this->writable = false;
 
-        $this->emit('end', array($this));
+        $this->emit('end');
         $this->close();
     }
 
@@ -143,7 +143,7 @@ class TransformStream extends EventEmitter implements DuplexStreamInterface
         $this->readable = false;
         $this->writable = false;
 
-        $this->emit('error', array($error, $this));
+        $this->emit('error', array($error));
         $this->close();
     }
 
