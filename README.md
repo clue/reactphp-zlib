@@ -34,7 +34,7 @@ each individual file chunk:
 
 ```php
 $loop = React\EventLoop\Factory::create();
-$stream = new Stream(fopen('access.log.gz', 'r'), $loop);
+$stream = new React\Stream\ReadableResourceStream(fopen('access.log.gz', 'r'), $loop);
 
 $decompressor = ZlibFilterStream::createGzipDecompressor();
 
