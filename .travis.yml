@@ -1,4 +1,5 @@
 language: php
+
 php:
   - 5.3
   - 5.4
@@ -6,7 +7,9 @@ php:
   - 5.6
   - 7
   - hhvm
+
 install:
-  - composer install --prefer-source --no-interaction
+  - composer install --no-interaction
+
 script:
-  - phpunit --coverage-text --verbose || ([[ $? = 139 ]] && echo && echo "Ignoring SEGFAULT.." >&2)
+  - vendor/bin/phpunit --coverage-text --verbose || ([[ $? = 139 ]] && echo && echo "Ignoring SEGFAULT.." >&2)
