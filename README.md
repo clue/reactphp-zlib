@@ -1,6 +1,6 @@
 # clue/zlib-react [![Build Status](https://travis-ci.org/clue/php-zlib-react.svg?branch=master)](https://travis-ci.org/clue/php-zlib-react)
 
-Streaming zlib compressor and decompressor, built on top of [React PHP](http://reactphp.org/),
+Streaming zlib compressor and decompressor for [ReactPHP](http://reactphp.org/),
 supporting compression and decompression of the following formats:
 
 * [RFC 1952](https://tools.ietf.org/html/rfc1952) (GZIP compressed format)
