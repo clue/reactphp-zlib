@@ -92,6 +92,9 @@ This format is commonly used in a streaming context:
 * PHP: `gzcompress()` and `gzuncompress()`
 * [HTTP compression](https://en.wikipedia.org/wiki/HTTP_compression) with `Content-Encoding: deflate` header
 * Java: `DeflaterOutputStream`
+* Qt's [`qCompress()`](http://doc.qt.io/qt-4.8/qbytearray.html#qCompress)
+  and [`qUncompress()`](http://doc.qt.io/qt-4.8/qbytearray.html#qUncompress)
+  uses the ZLIB format prefixed with the uncompressed length (as `UINT32BE`).
 
 Technically, this format uses [raw DEFLATE compression](#raw-deflate-format) wrapped in a ZLIB header and footer:
 
