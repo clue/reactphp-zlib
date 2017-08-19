@@ -58,6 +58,7 @@ class TransformStream extends EventEmitter implements DuplexStreamInterface
         $this->writable = false;
 
         $this->emit('close');
+        $this->removeAllListeners();
     }
 
     public function isReadable()

@@ -53,6 +53,18 @@ class TransformStreamTest extends TestCase
         $stream->close();
     }
 
+    public function testCloseRemovesListeners()
+    {
+        $stream = new TransformStream();
+        $this->assertCount(0, $stream->listeners('close'));
+
+        $stream->on('close', $this->expectCallableOnce());
+        $this->assertCount(1, $stream->listeners('close'));
+
+        $stream->close();
+        $this->assertCount(0, $stream->listeners('close'));
+    }
+
     public function testCloseOnlyEmitsCloses()
     {
         $stream = new TransformStream();
