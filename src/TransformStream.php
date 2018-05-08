@@ -16,17 +16,27 @@ class TransformStream extends EventEmitter implements DuplexStreamInterface
     private $readable = true;
     private $writable = true;
     private $closed = false;
+    private $paused = false;
+    private $drain = false;
 
     public function write($data)
     {
         if (!$this->writable || $data === '') {
-            return false;
+            return $this->writable;
         }
 
         try {
             $this->transformData($data);
+
+            if ($this->paused) {
+                $this->drain = true;
+                return false;
+            }
+
+            return true;
         } catch (Exception $e) {
             $this->forwardError($e);
+            return false;
         }
     }
 
@@ -73,12 +83,21 @@ class TransformStream extends EventEmitter implements DuplexStreamInterface
 
     public function pause()
     {
+        if (!$this->readable) {
+            return;
+        }
 
+        $this->paused = true;
     }
 
     public function resume()
     {
+        $this->paused = false;
 
+        if ($this->drain && $this->writable) {
+            $this->drain = false;
+            $this->emit('drain');
+        }
     }
 
     public function pipe(WritableStreamInterface $dest, array $options = array())
