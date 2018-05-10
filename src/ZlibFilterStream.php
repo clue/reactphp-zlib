@@ -17,46 +17,81 @@ use Clue\StreamFilter as Filter;
  */
 class ZlibFilterStream extends TransformStream
 {
+    /**
+     * @param int $encoding ZLIB_ENCODING_GZIP, ZLIB_ENCODING_RAW or ZLIB_ENCODING_DEFLATE
+     * @param int $level    optional compression level
+     * @return self
+     */
+    public static function createCompressor($encoding, $level = -1)
+    {
+        return new self(
+            Filter\fun('zlib.deflate', array('window' => $encoding, 'level' => $level))
+        );
+    }
+
+    /**
+     * @param int $encoding ZLIB_ENCODING_GZIP, ZLIB_ENCODING_RAW or ZLIB_ENCODING_DEFLATE
+     * @return self
+     */
+    public static function createDecompressor($encoding)
+    {
+        return new self(
+            Filter\fun('zlib.inflate', array('window' => $encoding))
+        );
+    }
+
+    /**
+     * @deprecated
+     * @return self
+     */
     public static function createGzipCompressor($level = -1)
     {
-        return new self(
-            Filter\fun('zlib.deflate', array('window' => 15|16, 'level' => $level))
-        );
+        return self::createCompressor(15 | 16 /* ZLIB_ENCODING_GZIP */, $level);
     }
 
+    /**
+     * @deprecated
+     * @return self
+     */
     public static function createGzipDecompressor()
     {
-        return new self(
-            Filter\fun('zlib.inflate', array('window' => 15|16))
-        );
+        return self::createDecompressor(15 | 16 /* ZLIB_ENCODING_GZIP */);
     }
 
+    /**
+     * @deprecated
+     * @return self
+     */
     public static function createDeflateCompressor($level = -1)
     {
-        return new self(
-            Filter\fun('zlib.deflate', array('window' => -15, 'level' => $level))
-        );
+        return self::createCompressor(-15 /* ZLIB_ENCODING_RAW */, $level);
     }
 
+    /**
+     * @deprecated
+     * @return self
+     */
     public static function createDeflateDecompressor()
     {
-        return new self(
-            Filter\fun('zlib.inflate', array('window' => -15))
-        );
+        return self::createDecompressor(-15 /* ZLIB_ENCODING_RAW */);
     }
 
+    /**
+     * @deprecated
+     * @return self
+     */
     public static function createZlibCompressor($level = -1)
     {
-        return new self(
-            Filter\fun('zlib.deflate', array('window' => 15, 'level' => $level))
-        );
+        return self::createCompressor(15 /* ZLIB_ENCODING_DEFLATE */, $level);
     }
 
+    /**
+     * @deprecated
+     * @return self
+     */
     public static function createZlibDecompressor()
     {
-        return new self(
-            Filter\fun('zlib.inflate', array('window' => 15))
-        );
+        return self::createDecompressor(15 /* ZLIB_ENCODING_DEFLATE */);
     }
 
     private $filter;

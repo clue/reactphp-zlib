@@ -35,7 +35,7 @@ each individual file chunk:
 $loop = React\EventLoop\Factory::create();
 $stream = new React\Stream\ReadableResourceStream(fopen('access.log.gz', 'r'), $loop);
 
-$decompressor = ZlibFilterStream::createGzipDecompressor();
+$decompressor = ZlibFilterStream::createDecompressor(ZLIB_ENCODING_GZIP);
 
 $decompressor->on('data', function ($data) {
     echo $data;
@@ -58,6 +58,7 @@ The zlib library offers a number of different formats (sometimes referred to as 
 This library supports the GZIP compression format as defined in [RFC 1952](https://tools.ietf.org/html/rfc1952).
 This is one of the more common compression formats and is used in several places:
 
+* PHP: `ZLIB_ENCODING_GZIP` (PHP 5.4+ only)
 * PHP: `gzdecode()` (PHP 5.4+ only) and `gzencode()`
 * Files with `.gz` file extension, e.g. `.tar.gz` or `.tgz` archives (also known as "tarballs")
 * `gzip` and `gunzip` (and family) command line tools
@@ -76,11 +77,12 @@ This library supports the raw DEFLATE compression format as defined in [RFC 1951
 The DEFLATE compression algorithm returns what we refer to as "raw DEFLATE format".
 This raw DEFLATE format is commonly wrapped in container formats instead of being used directly:
 
+* PHP: `ZLIB_ENCODING_RAW` (PHP 5.4+ only)
 * PHP: `gzdeflate()` and `gzinflate()`
 * Wrapped in [GZIP format](#gzip-format)
 * Wrapped in [ZLIB format](#zlib-format)
 
-> Note: This format is not the confused with what some people call "deflate format" or "deflate encoding".
+> Note: This format is not to be confused with what some people call "deflate format" or "deflate encoding".
 These names are commonly used to refer to what we call [ZLIB format](#zlib-format).
 
 ### ZLIB format
@@ -88,6 +90,7 @@ These names are commonly used to refer to what we call [ZLIB format](#zlib-forma
 This library supports the ZLIB compression format as defined in [RFC 1950](https://tools.ietf.org/html/rfc1950).
 This format is commonly used in a streaming context:
 
+* PHP: `ZLIB_ENCODING_DEFLATE` (PHP 5.4+ only)
 * PHP: `gzcompress()` and `gzuncompress()`
 * [HTTP compression](https://en.wikipedia.org/wiki/HTTP_compression) with `Content-Encoding: deflate` header
 * Java: `DeflaterOutputStream`
@@ -115,9 +118,17 @@ stream compression filters offered via `ext-zlib`.
 
 #### createCompressor()
 
-The following methods can be used to create a compressor instance:
+The following method can be used to create a compressor instance:
 
 ```php
+$encoding = ZLIB_ENCODING_GZIP; // or ZLIB_ENCODING_RAW or ZLIB_ENCODING_DEFLATE
+$compressor = ZlibFilterStream::createCompressor($encoding);
+```
+
+The following deprecated methods automatically pass in the respective encoding parameter:
+
+```php
+// deprecated
 $compressor = ZlibFilterStream::createGzipCompressor();
 $compressor = ZlibFilterStream::createDeflateCompressor();
 $compressor = ZlibFilterStream::createZlibCompressor();
@@ -125,9 +136,17 @@ $compressor = ZlibFilterStream::createZlibCompressor();
 
 #### createDecompressor()
 
-The following methods can be used to create a decompressor instance:
+The following method can be used to create a decompressor instance:
 
 ```php
+$encoding = ZLIB_ENCODING_GZIP; // or ZLIB_ENCODING_RAW or ZLIB_ENCODING_DEFLATE
+$compressor = ZlibFilterStream::createDecompressor($encoding);
+```
+
+The following deprecated methods automatically pass in the respective encoding parameter:
+
+```php
+// deprecated
 $decompressor = ZlibFilterStream::createGzipDecompressor();
 $decompressor = ZlibFilterStream::createDeflateDecompressor();
 $decompressor = ZlibFilterStream::createZlibDecompressor();
