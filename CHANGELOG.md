@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.1 (2018-05-11)
+
+*   Feature / Fix: Add backpressure support and support `pause()`/`resume()`.
+    (#18 by @clue)
+
+*   Update project homepage.
+    (#17 by @clue)
+
 ## 0.2.0 (2017-08-19)
 
 * Feature / BC break: Update to Stream v0.6 API and forward compatibility with Stream v1.0
