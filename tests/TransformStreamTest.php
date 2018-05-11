@@ -1,6 +1,7 @@
 <?php
 
 use Clue\React\Zlib\TransformStream;
+use React\Stream\ThroughStream;
 
 class TransformStreamTest extends TestCase
 {
@@ -94,5 +95,102 @@ class TransformStreamTest extends TestCase
         $stream->write('hello');
         $stream->end();
         $stream->close();
+    }
+
+    public function testWriteReturnsTrueNormally()
+    {
+        $stream = new TransformStream();
+
+        $ret = $stream->write('hello');
+        $this->assertTrue($ret);
+    }
+
+    public function testWriteEmptyStringReturnsTrueNormally()
+    {
+        $stream = new TransformStream();
+
+        $ret = $stream->write('');
+        $this->assertTrue($ret);
+    }
+
+    public function testWriteReturnsFalseWhenClosed()
+    {
+        $stream = new TransformStream();
+        $stream->close();
+
+        $ret = $stream->write('hello');
+        $this->assertFalse($ret);
+    }
+
+    public function testWriteEmptyStringReturnsFalseWhenClosed()
+    {
+        $stream = new TransformStream();
+        $stream->close();
+
+        $ret = $stream->write('');
+        $this->assertFalse($ret);
+    }
+
+    public function testWriteReturnsFalseWhenPaused()
+    {
+        $stream = new TransformStream();
+        $stream->pause();
+
+        $ret = $stream->write('hello');
+        $this->assertFalse($ret);
+    }
+
+    public function testWriteReturnsTrueWhenResumedAgain()
+    {
+        $stream = new TransformStream();
+        $stream->pause();
+        $stream->resume();
+
+        $ret = $stream->write('hello');
+        $this->assertTrue($ret);
+    }
+
+    public function testResumeEmitsDrainEventWhenPreviousWriteReturnedFalse()
+    {
+        $stream = new TransformStream();
+        $stream->pause();
+        $stream->write('hello');
+
+        $stream->on('drain', $this->expectCallableOnce());
+        $stream->resume();
+    }
+
+    public function testResumeDoesNotEmitDrainEventWhenNoPreviousWriteReturnedFalse()
+    {
+        $stream = new TransformStream();
+        $stream->pause();
+
+        $stream->on('drain', $this->expectCallableNever());
+        $stream->resume();
+    }
+
+    public function testPauseAndResumeIsNoOpWhenClosed()
+    {
+        $stream = new TransformStream();
+        $stream->close();
+
+        $stream->on('drain', $this->expectCallableNever());
+        $stream->pause();
+        $stream->resume();
+    }
+
+    public function testSupportsBackPressureInPipeChain()
+    {
+        $source = new ThroughStream();
+
+        $dest = new ThroughStream();
+        $dest->pause();
+
+        $stream = new TransformStream();
+
+        $source->pipe($stream)->pipe($dest);
+
+        $ret = $source->write('hello');
+        $this->assertFalse($ret);
     }
 }
