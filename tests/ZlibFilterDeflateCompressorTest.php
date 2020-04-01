@@ -13,8 +13,6 @@ class ZlibFilterDeflateCompressorTest extends TestCase
 
     public function testDeflateEmpty()
     {
-        if (PHP_VERSION >= 7) $this->markTestSkipped('Not supported on PHP 7 (empty chunk will not be emitted)');
-
         $this->compressor->on('data', $this->expectCallableOnceWith("\x03\x00"));
         $this->compressor->on('end', $this->expectCallableOnce());
 
