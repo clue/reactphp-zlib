@@ -2,8 +2,6 @@
 
 namespace Clue\React\Zlib;
 
-use Clue\StreamFilter as Filter;
-
 /**
  * Compressor and decompressor using PHP's zlib compression filters.
  *
@@ -14,39 +12,19 @@ use Clue\StreamFilter as Filter;
  * RFC 1950 (ZLIB compressed format)
  *
  * @link http://php.net/manual/en/filters.compression.php
+ * @deprecated 0.2.2 External usage of `ZlibFilterStream` is deprecated, use `Compressor` or `Decompressor` instead.
+ * @see Compressor
+ * @see Decompressor
  */
 class ZlibFilterStream extends TransformStream
 {
-    /**
-     * @param int $encoding ZLIB_ENCODING_GZIP, ZLIB_ENCODING_RAW or ZLIB_ENCODING_DEFLATE
-     * @param int $level    optional compression level
-     * @return self
-     */
-    public static function createCompressor($encoding, $level = -1)
-    {
-        return new self(
-            Filter\fun('zlib.deflate', array('window' => $encoding, 'level' => $level))
-        );
-    }
-
-    /**
-     * @param int $encoding ZLIB_ENCODING_GZIP, ZLIB_ENCODING_RAW or ZLIB_ENCODING_DEFLATE
-     * @return self
-     */
-    public static function createDecompressor($encoding)
-    {
-        return new self(
-            Filter\fun('zlib.inflate', array('window' => $encoding))
-        );
-    }
-
     /**
      * @deprecated
      * @return self
      */
     public static function createGzipCompressor($level = -1)
     {
-        return self::createCompressor(15 | 16 /* ZLIB_ENCODING_GZIP */, $level);
+        return new Compressor(15 | 16 /* ZLIB_ENCODING_GZIP */, $level);
     }
 
     /**
@@ -55,7 +33,7 @@ class ZlibFilterStream extends TransformStream
      */
     public static function createGzipDecompressor()
     {
-        return self::createDecompressor(15 | 16 /* ZLIB_ENCODING_GZIP */);
+        return new Decompressor(15 | 16 /* ZLIB_ENCODING_GZIP */);
     }
 
     /**
@@ -64,7 +42,7 @@ class ZlibFilterStream extends TransformStream
      */
     public static function createDeflateCompressor($level = -1)
     {
-        return self::createCompressor(-15 /* ZLIB_ENCODING_RAW */, $level);
+        return new Compressor(-15 /* ZLIB_ENCODING_RAW */, $level);
     }
 
     /**
@@ -73,7 +51,7 @@ class ZlibFilterStream extends TransformStream
      */
     public static function createDeflateDecompressor()
     {
-        return self::createDecompressor(-15 /* ZLIB_ENCODING_RAW */);
+        return new Decompressor(-15 /* ZLIB_ENCODING_RAW */);
     }
 
     /**
@@ -82,7 +60,7 @@ class ZlibFilterStream extends TransformStream
      */
     public static function createZlibCompressor($level = -1)
     {
-        return self::createCompressor(15 /* ZLIB_ENCODING_DEFLATE */, $level);
+        return new Compressor(15 /* ZLIB_ENCODING_DEFLATE */, $level);
     }
 
     /**
@@ -91,7 +69,7 @@ class ZlibFilterStream extends TransformStream
      */
     public static function createZlibDecompressor()
     {
-        return self::createDecompressor(15 /* ZLIB_ENCODING_DEFLATE */);
+        return new Decompressor(15 /* ZLIB_ENCODING_DEFLATE */);
     }
 
     private $filter;

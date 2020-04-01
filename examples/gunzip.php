@@ -12,7 +12,7 @@ $loop = React\EventLoop\Factory::create();
 $in = new React\Stream\ReadableResourceStream(STDIN, $loop);
 $out = new React\Stream\WritableResourceStream(STDOUT, $loop);
 
-$decompressor = Clue\React\Zlib\ZlibFilterStream::createDecompressor(ZLIB_ENCODING_GZIP);
+$decompressor = new Clue\React\Zlib\Decompressor(ZLIB_ENCODING_GZIP);
 $in->pipe($decompressor)->pipe($out);
 
 $decompressor->on('error', function ($e) {
