@@ -9,7 +9,7 @@ use React\Stream\Util;
 use Exception;
 
 /**
- * @internal Should not be relied upon outside of this package. Should eventually be moved to react/stream?
+ * @internal Should not be relied upon outside of this package.
  */
 class TransformStream extends EventEmitter implements DuplexStreamInterface
 {

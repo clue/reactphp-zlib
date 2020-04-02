@@ -12,13 +12,15 @@ GZIP format ([RFC 1950](https://tools.ietf.org/html/rfc1950),
 
 * [Quickstart example](#quickstart-example)
 * [Formats](#formats)
-  * [GZIP format](#gzip-format)
-  * [Raw DEFLATE format](#raw-deflate-format)
-  * [ZLIB format](#zlib-format)
+    * [GZIP format](#gzip-format)
+    * [Raw DEFLATE format](#raw-deflate-format)
+    * [ZLIB format](#zlib-format)
 * [Usage](#usage)
-  * [ZlibFilterStream](#zlibfilterstream)
-    * [createCompressor()](#createcompressor)
-    * [createDecompressor()](#createdecompressor)
+    * [Compressor](#compressor)
+    * [Decompressor](#decompressor)
+    * [ZlibFilterStream](#zlibfilterstream)
+        * [createCompressor()](#createcompressor)
+        * [createDecompressor()](#createdecompressor)
     * [Inconsistencies](#inconsistencies)
 * [Install](#install)
 * [Tests](#tests)
@@ -29,19 +31,18 @@ GZIP format ([RFC 1950](https://tools.ietf.org/html/rfc1950),
 
 Once [installed](#install), you can use the following code to pipe a readable
 gzip file stream into an decompressor which emits decompressed data events for
-each individual file chunk:
+each individual log file chunk:
 
 ```php
 $loop = React\EventLoop\Factory::create();
 $stream = new React\Stream\ReadableResourceStream(fopen('access.log.gz', 'r'), $loop);
 
-$decompressor = ZlibFilterStream::createGzipDecompressor();
+$decompressor = new Clue\React\Zlib\Decompressor(ZLIB_ENCODING_GZIP);
+$stream->pipe($decompressor);
 
 $decompressor->on('data', function ($data) {
-    echo $data;
+    echo $data; // chunk of decompressed log data
 });
-
-$stream->pipe($decompressor);
 
 $loop->run();
 ```
@@ -58,6 +59,7 @@ The zlib library offers a number of different formats (sometimes referred to as 
 This library supports the GZIP compression format as defined in [RFC 1952](https://tools.ietf.org/html/rfc1952).
 This is one of the more common compression formats and is used in several places:
 
+* PHP: `ZLIB_ENCODING_GZIP` (PHP 5.4+ only)
 * PHP: `gzdecode()` (PHP 5.4+ only) and `gzencode()`
 * Files with `.gz` file extension, e.g. `.tar.gz` or `.tgz` archives (also known as "tarballs")
 * `gzip` and `gunzip` (and family) command line tools
@@ -76,11 +78,12 @@ This library supports the raw DEFLATE compression format as defined in [RFC 1951
 The DEFLATE compression algorithm returns what we refer to as "raw DEFLATE format".
 This raw DEFLATE format is commonly wrapped in container formats instead of being used directly:
 
+* PHP: `ZLIB_ENCODING_RAW` (PHP 5.4+ only)
 * PHP: `gzdeflate()` and `gzinflate()`
 * Wrapped in [GZIP format](#gzip-format)
 * Wrapped in [ZLIB format](#zlib-format)
 
-> Note: This format is not the confused with what some people call "deflate format" or "deflate encoding".
+> Note: This format is not to be confused with what some people call "deflate format" or "deflate encoding".
 These names are commonly used to refer to what we call [ZLIB format](#zlib-format).
 
 ### ZLIB format
@@ -88,6 +91,7 @@ These names are commonly used to refer to what we call [ZLIB format](#zlib-forma
 This library supports the ZLIB compression format as defined in [RFC 1950](https://tools.ietf.org/html/rfc1950).
 This format is commonly used in a streaming context:
 
+* PHP: `ZLIB_ENCODING_DEFLATE` (PHP 5.4+ only)
 * PHP: `gzcompress()` and `gzuncompress()`
 * [HTTP compression](https://en.wikipedia.org/wiki/HTTP_compression) with `Content-Encoding: deflate` header
 * Java: `DeflaterOutputStream`
@@ -108,32 +112,120 @@ This documentation avoids this name in order to avoid confusion with the [raw DE
 
 All classes use the `Clue\React\Zlib` namespace.
 
+### Compressor
+
+The `Compressor` class can be used to compress a stream of data.
+
+It implements the [`DuplexStreamInterface`](https://github.com/reactphp/stream#duplexstreaminterface)
+and accepts uncompressed data on its writable side and emits compressed data
+on its readable side.
+
+```php
+$encoding = ZLIB_ENCODING_GZIP; // or ZLIB_ENCODING_RAW or ZLIB_ENCODING_DEFLATE
+$compressor = new Clue\React\Zlib\Compressor($encoding);
+
+$compressor->on('data', function ($data) {
+    echo $data; // compressed binary data chunk
+});
+
+$compressor->write($uncompressed); // write uncompressed data chunk
+```
+
+This is particularly useful in a piping context:
+
+```php
+$input->pipe($filterBadWords)->pipe($compressor)->pipe($output);
+```
+
+For more details, see ReactPHP's
+[`DuplexStreamInterface`](https://github.com/reactphp/stream#duplexstreaminterface).
+
+>   Internally, it implements the deprecated `ZlibFilterStream` class only for
+    BC reasons. For best forwards compatibility, you should only rely on it
+    implementing the `DuplexStreamInterface`.
+
+### Decompressor
+
+The `Decompressor` class can be used to decompress a stream of data.
+
+It implements the [`DuplexStreamInterface`](https://github.com/reactphp/stream#duplexstreaminterface)
+and accepts compressed data on its writable side and emits decompressed data
+on its readable side.
+
+```php
+$encoding = ZLIB_ENCODING_GZIP; // or ZLIB_ENCODING_RAW or ZLIB_ENCODING_DEFLATE
+$decompressor = new Clue\React\Zlib\Decompressor($encoding);
+
+$decompressor->on('data', function ($data) {
+    echo $data; // decompressed data chunk
+});
+
+$decompressor->write($compressed); // write compressed binary data chunk
+```
+
+This is particularly useful in a piping context:
+
+```php
+$input->pipe($decompressor)->pipe($filterBadWords)->pipe($output);
+```
+
+For more details, see ReactPHP's
+[`DuplexStreamInterface`](https://github.com/reactphp/stream#duplexstreaminterface).
+
+>   Internally, it implements the deprecated `ZlibFilterStream` class only for
+    BC reasons. For best forwards compatibility, you should only rely on it
+    implementing the `DuplexStreamInterface`.
+
 ### ZlibFilterStream
 
-The `ZlibFilterStream` is a small wrapper around the underlying `zlib.deflate` and `zlib.inflate`
+The deprecated `ZlibFilterStream` is a small wrapper around the underlying `zlib.deflate` and `zlib.inflate`
 stream compression filters offered via `ext-zlib`.
 
 #### createCompressor()
 
-The following methods can be used to create a compressor instance:
+The following deprecated methods can be used to
+create a `Compressor` instance with the respective encoding parameter:
 
 ```php
+// deprecated
 $compressor = ZlibFilterStream::createGzipCompressor();
 $compressor = ZlibFilterStream::createDeflateCompressor();
 $compressor = ZlibFilterStream::createZlibCompressor();
 ```
 
-#### createDecompressor()
-
-The following methods can be used to create a decompressor instance:
+Using any of these methods is deprecated.
+Instead, you should explicitly create a `Compressor` like this:
 
 ```php
+$encoding = ZLIB_ENCODING_GZIP; // or ZLIB_ENCODING_RAW or ZLIB_ENCODING_DEFLATE
+$compressor = new Clue\React\Zlib\Compressor($encoding);
+```
+
+See also [`Compressor`](#compressor) for more details.
+
+#### createDecompressor()
+
+The following deprecated methods can be used to
+create a `Decompressor` instanceof with the respective encoding parameter:
+
+```php
+// deprecated
 $decompressor = ZlibFilterStream::createGzipDecompressor();
 $decompressor = ZlibFilterStream::createDeflateDecompressor();
 $decompressor = ZlibFilterStream::createZlibDecompressor();
 ```
 
-#### Inconsistencies
+Using any of these methods is deprecated.
+Instead, you should explicitly create a `Decompressor` like this:
+
+```php
+$encoding = ZLIB_ENCODING_GZIP; // or ZLIB_ENCODING_RAW or ZLIB_ENCODING_DEFLATE
+$decompressor = new Clue\React\Zlib\Decompressor($encoding);
+```
+
+See also [`Compressor`](#compressor) for more details.
+
+### Inconsistencies
 
 The stream compression filters are not exactly the most commonly used features of PHP.
 As such, we've spotted several inconsistencies (or *bugs*) between different PHP versions and HHVM.
