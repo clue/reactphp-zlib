@@ -15,8 +15,6 @@ class ZlibFilterZlibCompressorTest extends TestCase
 
     public function testCompressEmpty()
     {
-        if (PHP_VERSION >= 7) $this->markTestSkipped('Not supported on PHP 7 (empty chunk will not be emitted)');
-
         $this->compressor->on('data', $this->expectCallableOnceWith("\x78\x9c" . "\x03\x00" . "\x00\x00\x00\x01"));
         $this->compressor->on('end', $this->expectCallableOnce());
 

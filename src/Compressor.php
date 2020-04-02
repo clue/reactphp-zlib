@@ -46,5 +46,7 @@ final class Compressor extends ZlibFilterStream
         parent::__construct(
             Filter\fun('zlib.deflate', array('window' => $encoding, 'level' => $level))
         );
+
+        $this->emptyWrite = $encoding;
     }
 }

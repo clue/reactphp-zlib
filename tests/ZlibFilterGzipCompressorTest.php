@@ -15,8 +15,6 @@ class ZlibFilterGzipCompressorTest extends TestCase
 
     public function testCompressEmpty()
     {
-        if (PHP_VERSION >= 7) $this->markTestSkipped('Not supported on PHP 7 (empty chunk will not be emitted)');
-
         $os = "\x03"; // UNIX (0x03) or UNKNOWN (0xFF)
         $this->compressor->on('data', $this->expectCallableOnceWith("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00" . $os . "\x03\x00" . "\x00\x00\x00\x00\x00\x00\x00\x00"));
         $this->compressor->on('end', $this->expectCallableOnce());
