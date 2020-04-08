@@ -15,7 +15,7 @@ class ZlibFilterGzipCompressorTest extends TestCase
 
     public function testCompressEmpty()
     {
-        $os = "\x03"; // UNIX (0x03) or UNKNOWN (0xFF)
+        $os = DIRECTORY_SEPARATOR === '\\' ? "\x0a" : "\x03"; // NTFS(0x0a) or UNIX (0x03)
         $this->compressor->on('data', $this->expectCallableOnceWith("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00" . $os . "\x03\x00" . "\x00\x00\x00\x00\x00\x00\x00\x00"));
         $this->compressor->on('end', $this->expectCallableOnce());
 

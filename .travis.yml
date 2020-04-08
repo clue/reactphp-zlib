@@ -17,8 +17,16 @@ matrix:
     - php: 7.2
     - php: 7.3
     - php: 7.4
+    - name: "Windows"
+      os: windows
+      language: shell # no built-in php support
+      before_install:
+        - choco install php
+        - choco install composer
+        - export PATH="$(powershell -Command '("Process", "Machine" | % { [Environment]::GetEnvironmentVariable("PATH", $_) -Split ";" -Replace "\\$", "" } | Select -Unique | % { cygpath $_ }) -Join ":"')"
     - php: hhvm-3.18
   allow_failures:
+    - os: windows
     - php: hhvm-3.18
 
 install:
