@@ -188,9 +188,7 @@ $ composer require clue/zlib-react:^0.2.2
 See also the [CHANGELOG](CHANGELOG.md) for details about version upgrades.
 
 This project aims to run on any platform and thus does not require any PHP
-extensions besides `ext-zlib` and supports running on legacy PHP 5.4 through current
-PHP 7+.
-It's *highly recommended to use PHP 7+* for this project.
+extensions besides `ext-zlib` and supports running on current PHP 7+.
 
 The `ext-zlib` extension is required for handling the underlying data compression
 and decompression.
@@ -200,8 +198,8 @@ builds by default. If you're building PHP from source, you may have to
 [manually enable](https://www.php.net/manual/en/zlib.installation.php) it.
 
 We're committed to providing a smooth upgrade path for legacy setups.
-If you need to support legacy PHP 5.3 and legacy HHVM, you may want to check out
-the legacy `v0.2.x` release branch.
+If you need to support legacy PHP versions and legacy HHVM, you may want to
+check out the legacy `v0.2.x` release branch.
 This legacy release branch also provides an installation candidate that does not
 require `ext-zlib` during installation but uses runtime checks instead.
 
