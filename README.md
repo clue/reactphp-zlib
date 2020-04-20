@@ -1,10 +1,7 @@
 # clue/reactphp-zlib [![Build Status](https://travis-ci.org/clue/reactphp-zlib.svg?branch=master)](https://travis-ci.org/clue/reactphp-zlib)
 
-Streaming zlib compressor and decompressor for [ReactPHP](http://reactphp.org/),
-supporting compression and decompression of ZLIB format, raw DEFLATE format and
-GZIP format ([RFC 1950](https://tools.ietf.org/html/rfc1950),
-[RFC 1951](https://tools.ietf.org/html/rfc1951) and
-[RFC 1952](https://tools.ietf.org/html/rfc1952)).
+Streaming zlib compressor and decompressor for [ReactPHP](https://reactphp.org/),
+supporting compression and decompression of GZIP, ZLIB and raw DEFLATE formats.
 
 > Note: This project is in beta stage! Feel free to report any issues you encounter.
 
@@ -95,8 +92,8 @@ This format is commonly used in a streaming context:
 * PHP: `gzcompress()` and `gzuncompress()`
 * [HTTP compression](https://en.wikipedia.org/wiki/HTTP_compression) with `Content-Encoding: deflate` header
 * Java: `DeflaterOutputStream`
-* Qt's [`qCompress()`](http://doc.qt.io/qt-4.8/qbytearray.html#qCompress)
-  and [`qUncompress()`](http://doc.qt.io/qt-4.8/qbytearray.html#qUncompress)
+* Qt's [`qCompress()`](https://doc.qt.io/archives/qt-4.8/qbytearray.html#qCompress)
+  and [`qUncompress()`](https://doc.qt.io/archives/qt-4.8/qbytearray.html#qUncompress)
   uses the ZLIB format prefixed with the uncompressed length (as `UINT32BE`).
 
 Technically, this format uses [raw DEFLATE compression](#raw-deflate-format) wrapped in a ZLIB header and footer:
@@ -244,10 +241,11 @@ If you feel some test case is missing or outdated, we're happy to accept PRs! :)
 The recommended way to install this library is [through Composer](https://getcomposer.org).
 [New to Composer?](https://getcomposer.org/doc/00-intro.md)
 
+While in beta, this project does not currently follow [SemVer](https://semver.org/).
 This will install the latest supported version:
 
 ```bash
-$ composer require clue/zlib-react:^0.2.1
+$ composer require clue/zlib-react:^0.2.2
 ```
 
 See also the [CHANGELOG](CHANGELOG.md) for details about version upgrades.
@@ -280,11 +278,14 @@ $ php vendor/bin/phpunit
 
 ## License
 
-MIT
+This project is released under the permissive [MIT license](LICENSE).
+
+> Did you know that I offer custom development services and issuing invoices for
+  sponsorships of releases and for contributions? Contact me (@clue) for details.
 
 ## More
 
 * If you want to learn more about processing streams of data, refer to the documentation of
   the underlying [react/stream](https://github.com/reactphp/stream) component
 * If you want to process compressed tarballs (`.tar.gz` and `.tgz` file extension), you may
-  want to use [clue/tar-react](https://github.com/clue/php-tar-react) on the decompressed stream.
+  want to use [clue/reactphp-tar](https://github.com/clue/reactphp-tar) on the decompressed stream.

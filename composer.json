@@ -1,13 +1,13 @@
 {
     "name": "clue/zlib-react",
-    "description": "Streaming zlib compressor and decompressor for ReactPHP, supporting compression and decompression of ZLIB format, raw DEFLATE format and GZIP format (RFC 1950, RFC 1951 and RFC 1952).",
+    "description": "Streaming zlib compressor and decompressor for ReactPHP, supporting compression and decompression of GZIP, ZLIB and raw DEFLATE formats.",
     "keywords": ["zlib", "gzip", "gz", "deflate", "inflate", "compression", "decompression", "RFC 1950", "RFC 1951", "RFC 1952", "ReactPHP"],
     "homepage": "https://github.com/clue/reactphp-zlib",
     "license": "MIT",
     "authors": [
         {
             "name": "Christian Lück",
-            "email": "christian@lueck.tv"
+            "email": "christian@clue.engineering"
         }
     ],
     "require": {
