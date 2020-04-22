@@ -15,9 +15,6 @@ supporting compression and decompression of GZIP, ZLIB and raw DEFLATE formats.
 * [Usage](#usage)
     * [Compressor](#compressor)
     * [Decompressor](#decompressor)
-    * [ZlibFilterStream](#zlibfilterstream)
-        * [createCompressor()](#createcompressor)
-        * [createDecompressor()](#createdecompressor)
     * [Inconsistencies](#inconsistencies)
 * [Install](#install)
 * [Tests](#tests)
@@ -137,10 +134,6 @@ $input->pipe($filterBadWords)->pipe($compressor)->pipe($output);
 For more details, see ReactPHP's
 [`DuplexStreamInterface`](https://github.com/reactphp/stream#duplexstreaminterface).
 
->   Internally, it implements the deprecated `ZlibFilterStream` class only for
-    BC reasons. For best forwards compatibility, you should only rely on it
-    implementing the `DuplexStreamInterface`.
-
 ### Decompressor
 
 The `Decompressor` class can be used to decompress a stream of data.
@@ -168,59 +161,6 @@ $input->pipe($decompressor)->pipe($filterBadWords)->pipe($output);
 
 For more details, see ReactPHP's
 [`DuplexStreamInterface`](https://github.com/reactphp/stream#duplexstreaminterface).
-
->   Internally, it implements the deprecated `ZlibFilterStream` class only for
-    BC reasons. For best forwards compatibility, you should only rely on it
-    implementing the `DuplexStreamInterface`.
-
-### ZlibFilterStream
-
-The deprecated `ZlibFilterStream` is a small wrapper around the underlying `zlib.deflate` and `zlib.inflate`
-stream compression filters offered via `ext-zlib`.
-
-#### createCompressor()
-
-The following deprecated methods can be used to
-create a `Compressor` instance with the respective encoding parameter:
-
-```php
-// deprecated
-$compressor = ZlibFilterStream::createGzipCompressor();
-$compressor = ZlibFilterStream::createDeflateCompressor();
-$compressor = ZlibFilterStream::createZlibCompressor();
-```
-
-Using any of these methods is deprecated.
-Instead, you should explicitly create a `Compressor` like this:
-
-```php
-$encoding = ZLIB_ENCODING_GZIP; // or ZLIB_ENCODING_RAW or ZLIB_ENCODING_DEFLATE
-$compressor = new Clue\React\Zlib\Compressor($encoding);
-```
-
-See also [`Compressor`](#compressor) for more details.
-
-#### createDecompressor()
-
-The following deprecated methods can be used to
-create a `Decompressor` instanceof with the respective encoding parameter:
-
-```php
-// deprecated
-$decompressor = ZlibFilterStream::createGzipDecompressor();
-$decompressor = ZlibFilterStream::createDeflateDecompressor();
-$decompressor = ZlibFilterStream::createZlibDecompressor();
-```
-
-Using any of these methods is deprecated.
-Instead, you should explicitly create a `Decompressor` like this:
-
-```php
-$encoding = ZLIB_ENCODING_GZIP; // or ZLIB_ENCODING_RAW or ZLIB_ENCODING_DEFLATE
-$decompressor = new Clue\React\Zlib\Decompressor($encoding);
-```
-
-See also [`Compressor`](#compressor) for more details.
 
 ### Inconsistencies
 

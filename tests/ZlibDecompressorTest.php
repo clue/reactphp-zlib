@@ -1,14 +1,14 @@
 <?php
 
-use Clue\React\Zlib\ZlibFilterStream;
+use Clue\React\Zlib\Decompressor;
 
-class ZlibFilterGzipDecompressorTest extends TestCase
+class ZlibDecompressorTest extends TestCase
 {
     private $decompressor;
 
     public function setUp()
     {
-        $this->decompressor = ZlibFilterStream::createGzipDecompressor();
+        $this->decompressor = new Decompressor(ZLIB_ENCODING_DEFLATE);
     }
 
     public function testDecompressEmpty()
@@ -16,7 +16,7 @@ class ZlibFilterGzipDecompressorTest extends TestCase
         $this->decompressor->on('data', $this->expectCallableNever());
         $this->decompressor->on('end', $this->expectCallableOnce());
 
-        $this->decompressor->end(gzencode(''));
+        $this->decompressor->end(gzcompress(''));
     }
 
     public function testDecompressHelloWorld()
@@ -26,7 +26,7 @@ class ZlibFilterGzipDecompressorTest extends TestCase
         });
         $this->decompressor->on('end', $this->expectCallableOnce());
 
-        $this->decompressor->end(gzencode('hello world'));
+        $this->decompressor->end(gzcompress('hello world'));
 
         $this->assertEquals('hello world', $buffered);
     }
@@ -39,7 +39,7 @@ class ZlibFilterGzipDecompressorTest extends TestCase
         $this->decompressor->on('end', $this->expectCallableOnce());
 
         $data = str_repeat('hello', 100);
-        $bytes = gzencode($data);
+        $bytes = gzcompress($data);
         foreach (str_split($bytes, 1) as $byte) {
             $this->decompressor->write($byte);
         }

@@ -1,14 +1,14 @@
 <?php
 
-use Clue\React\Zlib\ZlibFilterStream;
+use Clue\React\Zlib\Compressor;
 
-class ZlibFilterGzipCompressorTest extends TestCase
+class GzipCompressorTest extends TestCase
 {
     private $compressor;
 
     public function setUp()
     {
-        $this->compressor = ZlibFilterStream::createGzipCompressor();
+        $this->compressor = new Compressor(ZLIB_ENCODING_GZIP);
     }
 
     public function testCompressEmpty()

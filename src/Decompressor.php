@@ -30,10 +30,6 @@ use Clue\StreamFilter as Filter;
  *
  * For more details, see ReactPHP's
  * [`DuplexStreamInterface`](https://github.com/reactphp/stream#duplexstreaminterface).
- *
- * >   Internally, it implements the deprecated `ZlibFilterStream` class only for
- *     BC reasons. For best forwards compatibility, you should only rely on it
- *     implementing the `DuplexStreamInterface`.
  */
 final class Decompressor extends ZlibFilterStream
 {
