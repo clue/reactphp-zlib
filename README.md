@@ -231,7 +231,6 @@ These inconsistencies exist in the underlying PHP engines and there's little we 
 * All Zend PHP versions: Decompressing invalid data does not emit any data (and does not raise an error)
 * HHVM only: does not currently support the GZIP and ZLIB format at all (and does not raise an error)
 * HHVM only: The [`zlib.deflate` filter function](https://github.com/facebook/hhvm/blob/fee8ae39ce395c7b9b8910dfde6f22a7745aea83/hphp/system/php/stream/default-filters.php#L77) buffers the whole string. This means that compressing a stream of 100 MB actually stores the whole string in memory before invoking the underlying compression algorithm.
-* PHP 5.3 only: Tends to SEGFAULT occasionally on shutdown?
 
 Our test suite contains several test cases that exhibit these issues.
 If you feel some test case is missing or outdated, we're happy to accept PRs! :)
@@ -251,7 +250,7 @@ $ composer require clue/zlib-react:^0.2.2
 See also the [CHANGELOG](CHANGELOG.md) for details about version upgrades.
 
 This project aims to run on any platform and thus does not require any PHP
-extensions and supports running on legacy PHP 5.3 through current PHP 7+ and
+extensions and supports running on legacy PHP 5.4 through current PHP 7+ and
 HHVM.
 It's *highly recommended to use PHP 7+* for this project.
 Older PHP versions may suffer from a number of inconsistencies documented above.
@@ -260,6 +259,10 @@ The `ext-zlib` extension is not required to install this library, however it
 is required to actually do anything meaningful with this library.
 Each of the above methods will throw an `Exception` if this extension is
 missing.
+
+We're committed to providing a smooth upgrade path for legacy setups.
+If you need to support legacy PHP 5.3, you may want to check out the legacy
+`v0.2.x` release branch.
 
 ## Tests
 

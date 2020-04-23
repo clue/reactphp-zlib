@@ -5,10 +5,6 @@ dist: trusty
 
 matrix:
   include:
-    - php: 5.3
-      dist: precise
-      script:
-        - vendor/bin/phpunit --coverage-text --verbose || [[ $? = 139 ]] # ignore SEGFAULT on legacy PHP 5.3 only
     - php: 5.4
     - php: 5.5
     - php: 5.6
