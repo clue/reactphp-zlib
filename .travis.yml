@@ -20,10 +20,8 @@ matrix:
         - choco install php
         - choco install composer
         - export PATH="$(powershell -Command '("Process", "Machine" | % { [Environment]::GetEnvironmentVariable("PATH", $_) -Split ";" -Replace "\\$", "" } | Select -Unique | % { cygpath $_ }) -Join ":"')"
-    - php: hhvm-3.18
   allow_failures:
     - os: windows
-    - php: hhvm-3.18
 
 install:
   - composer install --no-interaction

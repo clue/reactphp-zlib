@@ -7,9 +7,6 @@ class FunctionalExamplesTest extends TestCase
         if (DIRECTORY_SEPARATOR === '\\') {
             $this->markTestSkipped('Non-blocking console I/O not supported on Windows');
         }
-        if (defined('HHVM_VERSION')) {
-            $this->markTestSkipped('Not supported on HHVM (ignores window size / encoding format)');
-        }
     }
     public function testChain()
     {

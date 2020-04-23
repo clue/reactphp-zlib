@@ -8,8 +8,6 @@ class ZlibFilterGzipCompressorTest extends TestCase
 
     public function setUp()
     {
-        if (defined('HHVM_VERSION')) $this->markTestSkipped('Not supported on HHVM (ignores window size / encoding format)');
-
         $this->compressor = ZlibFilterStream::createGzipCompressor();
     }
 

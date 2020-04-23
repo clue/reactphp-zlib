@@ -8,8 +8,6 @@ class ZlibFilterZlibDecompressorTest extends TestCase
 
     public function setUp()
     {
-        if (defined('HHVM_VERSION')) $this->markTestSkipped('Not supported on HHVM (ignores window size / encoding format)');
-
         $this->decompressor = ZlibFilterStream::createZlibDecompressor();
     }
 
@@ -52,7 +50,7 @@ class ZlibFilterZlibDecompressorTest extends TestCase
 
     public function testDecompressInvalid()
     {
-        $this->markTestSkipped('Not supported by any PHP engine (neither does reject invalid data)');
+        $this->markTestSkipped('Not supported by any PHP version (neither does reject invalid data)');
 
         $this->decompressor->on('data', $this->expectCallableNever());
         $this->decompressor->on('error', $this->expectCallableOnce());
