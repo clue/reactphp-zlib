@@ -26,11 +26,6 @@ if (DIRECTORY_SEPARATOR === '\\') {
     exit(1);
 }
 
-if (!defined('ZLIB_ENCODING_GZIP')) {
-    fwrite(STDERR, 'Requires PHP with ext-zlib enabled' . PHP_EOL);
-    exit(1);
-}
-
 if ($argc !== 2) {
     fwrite(STDERR, 'No archive given, requires single argument' . PHP_EOL);
     exit(1);

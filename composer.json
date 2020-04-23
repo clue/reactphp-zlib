@@ -12,6 +12,7 @@
     ],
     "require": {
         "php": ">=5.4",
+        "ext-zlib": "*",
         "clue/stream-filter": "~1.3",
         "react/stream": "^1.0 || ^0.7 || ^0.6"
     },

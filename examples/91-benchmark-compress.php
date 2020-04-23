@@ -22,12 +22,6 @@ if (DIRECTORY_SEPARATOR === '\\') {
     exit(1);
 }
 
-if (!defined('ZLIB_ENCODING_GZIP')) {
-    fwrite(STDERR, 'Requires PHP with ext-zlib enabled' . PHP_EOL);
-    exit(1);
-}
-
-
 if (extension_loaded('xdebug')) {
     echo 'NOTICE: The "xdebug" extension is loaded, this has a major impact on performance.' . PHP_EOL;
 }
