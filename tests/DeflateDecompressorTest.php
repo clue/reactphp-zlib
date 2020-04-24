@@ -1,37 +1,37 @@
 <?php
 
-use Clue\React\Zlib\ZlibFilterStream;
+use Clue\React\Zlib\Decompressor;
 
-class ZlibFilterZlibDecompressorTest extends TestCase
+class DeflateDecompressorTest extends TestCase
 {
     private $decompressor;
 
     public function setUp()
     {
-        $this->decompressor = ZlibFilterStream::createZlibDecompressor();
+        $this->decompressor = new Decompressor(ZLIB_ENCODING_RAW);
     }
 
-    public function testDecompressEmpty()
+    public function testInflateEmpty()
     {
         $this->decompressor->on('data', $this->expectCallableNever());
         $this->decompressor->on('end', $this->expectCallableOnce());
 
-        $this->decompressor->end(gzcompress(''));
+        $this->decompressor->end(gzdeflate(''));
     }
 
-    public function testDecompressHelloWorld()
+    public function testInflateHelloWorld()
     {
         $this->decompressor->on('data', function ($data) use (&$buffered) {
             $buffered .= $data;
         });
         $this->decompressor->on('end', $this->expectCallableOnce());
 
-        $this->decompressor->end(gzcompress('hello world'));
+        $this->decompressor->end(gzdeflate('hello world'));
 
         $this->assertEquals('hello world', $buffered);
     }
 
-    public function testDecompressBig()
+    public function testInflateBig()
     {
         $this->decompressor->on('data', function ($data) use (&$buffered) {
             $buffered .= $data;
@@ -39,7 +39,7 @@ class ZlibFilterZlibDecompressorTest extends TestCase
         $this->decompressor->on('end', $this->expectCallableOnce());
 
         $data = str_repeat('hello', 100);
-        $bytes = gzcompress($data);
+        $bytes = gzdeflate($data);
         foreach (str_split($bytes, 1) as $byte) {
             $this->decompressor->write($byte);
         }
@@ -48,7 +48,7 @@ class ZlibFilterZlibDecompressorTest extends TestCase
         $this->assertEquals($data, $buffered);
     }
 
-    public function testDecompressInvalid()
+    public function testInflateInvalid()
     {
         $this->markTestSkipped('Not supported by any PHP version (neither does reject invalid data)');
 

@@ -1,25 +1,25 @@
 <?php
 
-use Clue\React\Zlib\ZlibFilterStream;
+use Clue\React\Zlib\Compressor;
 
-class ZlibFilterDeflateCompressorTest extends TestCase
+class ZlibCompressorTest extends TestCase
 {
     private $compressor;
 
     public function setUp()
     {
-        $this->compressor = ZlibFilterStream::createDeflateCompressor();
+        $this->compressor = new Compressor(ZLIB_ENCODING_DEFLATE);
     }
 
-    public function testDeflateEmpty()
+    public function testCompressEmpty()
     {
-        $this->compressor->on('data', $this->expectCallableOnceWith("\x03\x00"));
+        $this->compressor->on('data', $this->expectCallableOnceWith("\x78\x9c" . "\x03\x00" . "\x00\x00\x00\x01"));
         $this->compressor->on('end', $this->expectCallableOnce());
 
         $this->compressor->end();
     }
 
-    public function testDeflateHelloWorld()
+    public function testCompressHelloWorld()
     {
         $this->compressor->on('data', function ($data) use (&$buffered) {
             $buffered .= $data;
@@ -28,10 +28,10 @@ class ZlibFilterDeflateCompressorTest extends TestCase
 
         $this->compressor->end('hello world');
 
-        $this->assertEquals('hello world', gzinflate($buffered));
+        $this->assertEquals('hello world', gzuncompress($buffered));
     }
 
-    public function testDeflateBig()
+    public function testCompressBig()
     {
         $this->compressor->on('data', function ($data) use (&$buffered) {
             $buffered .= $data;
@@ -44,6 +44,6 @@ class ZlibFilterDeflateCompressorTest extends TestCase
         }
         $this->compressor->end();
 
-        $this->assertEquals($data, gzinflate($buffered));
+        $this->assertEquals($data, gzuncompress($buffered));
     }
 }
