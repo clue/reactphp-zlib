@@ -15,7 +15,6 @@ supporting compression and decompression of GZIP, ZLIB and raw DEFLATE formats.
 * [Usage](#usage)
     * [Compressor](#compressor)
     * [Decompressor](#decompressor)
-    * [Inconsistencies](#inconsistencies)
 * [Install](#install)
 * [Tests](#tests)
 * [License](#license)
@@ -161,17 +160,6 @@ $input->pipe($decompressor)->pipe($filterBadWords)->pipe($output);
 
 For more details, see ReactPHP's
 [`DuplexStreamInterface`](https://github.com/reactphp/stream#duplexstreaminterface).
-
-### Inconsistencies
-
-The stream compression filters are not exactly the most commonly used features of PHP.
-As such, we've spotted some inconsistencies (or *bugs*) in different PHP versions.
-These inconsistencies exist in the underlying PHP engines and there's little we can do about this in this library.
-
-* All PHP versions: Decompressing invalid data does not emit any data (and does not raise an error)
-
-Our test suite contains several test cases that exhibit these issues.
-If you feel some test case is missing or outdated, we're happy to accept PRs! :)
 
 ## Install
 

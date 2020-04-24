@@ -48,10 +48,16 @@ class GzipDecompressorTest extends TestCase
         $this->assertEquals($data, $buffered);
     }
 
-    public function testDecompressInvalid()
+    public function testDecompressInvalidDataEmitsError()
     {
-        $this->markTestSkipped('Not supported by any PHP version (neither does reject invalid data)');
+        $this->decompressor->on('data', $this->expectCallableNever());
+        $this->decompressor->on('error', $this->expectCallableOnce());
 
+        $this->decompressor->write('invalid');
+    }
+
+    public function testDecompressInvalidOnEndEmitsError()
+    {
         $this->decompressor->on('data', $this->expectCallableNever());
         $this->decompressor->on('error', $this->expectCallableOnce());
 
