@@ -7,11 +7,6 @@ if (DIRECTORY_SEPARATOR === '\\') {
     exit(1);
 }
 
-if (!defined('ZLIB_ENCODING_GZIP')) {
-    fwrite(STDERR, 'Requires PHP with ext-zlib enabled' . PHP_EOL);
-    exit(1);
-}
-
 $loop = React\EventLoop\Factory::create();
 
 $in = new React\Stream\ReadableResourceStream(STDIN, $loop);

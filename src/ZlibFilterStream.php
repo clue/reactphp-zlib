@@ -24,7 +24,7 @@ class ZlibFilterStream extends TransformStream
      */
     public static function createGzipCompressor($level = -1)
     {
-        return new Compressor(15 | 16 /* ZLIB_ENCODING_GZIP */, $level);
+        return new Compressor(ZLIB_ENCODING_GZIP, $level);
     }
 
     /**
@@ -33,7 +33,7 @@ class ZlibFilterStream extends TransformStream
      */
     public static function createGzipDecompressor()
     {
-        return new Decompressor(15 | 16 /* ZLIB_ENCODING_GZIP */);
+        return new Decompressor(ZLIB_ENCODING_GZIP);
     }
 
     /**
@@ -42,7 +42,7 @@ class ZlibFilterStream extends TransformStream
      */
     public static function createDeflateCompressor($level = -1)
     {
-        return new Compressor(-15 /* ZLIB_ENCODING_RAW */, $level);
+        return new Compressor(ZLIB_ENCODING_RAW, $level);
     }
 
     /**
@@ -51,7 +51,7 @@ class ZlibFilterStream extends TransformStream
      */
     public static function createDeflateDecompressor()
     {
-        return new Decompressor(-15 /* ZLIB_ENCODING_RAW */);
+        return new Decompressor(ZLIB_ENCODING_RAW);
     }
 
     /**
@@ -60,7 +60,7 @@ class ZlibFilterStream extends TransformStream
      */
     public static function createZlibCompressor($level = -1)
     {
-        return new Compressor(15 /* ZLIB_ENCODING_DEFLATE */, $level);
+        return new Compressor(ZLIB_ENCODING_DEFLATE, $level);
     }
 
     /**
@@ -69,7 +69,7 @@ class ZlibFilterStream extends TransformStream
      */
     public static function createZlibDecompressor()
     {
-        return new Decompressor(15 /* ZLIB_ENCODING_DEFLATE */);
+        return new Decompressor(ZLIB_ENCODING_DEFLATE);
     }
 
     private $filter;
