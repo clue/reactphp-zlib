@@ -57,7 +57,7 @@ final class Decompressor extends TransformStream
         }
 
         if ($ret !== '') {
-            $this->forwardData($ret);
+            $this->emit('data', [$ret]);
         }
     }
 
@@ -71,9 +71,10 @@ final class Decompressor extends TransformStream
         }
 
         if ($ret !== '') {
-            $this->forwardData($ret);
+            $this->emit('data', [$ret]);
         }
 
-        $this->forwardEnd();
+        $this->emit('end');
+        $this->close();
     }
 }

@@ -55,7 +55,7 @@ final class Compressor extends TransformStream
         $ret = deflate_add($this->context, $chunk, ZLIB_NO_FLUSH);
 
         if ($ret !== '') {
-            $this->forwardData($ret);
+            $this->emit('data', [$ret]);
         }
     }
 
@@ -65,9 +65,10 @@ final class Compressor extends TransformStream
         $this->context = null;
 
         if ($ret !== '') {
-            $this->forwardData($ret);
+            $this->emit('data', [$ret]);
         }
 
-        $this->forwardEnd();
+        $this->emit('end');
+        $this->close();
     }
 }
