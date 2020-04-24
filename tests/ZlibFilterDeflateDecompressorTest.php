@@ -33,8 +33,6 @@ class ZlibFilterDeflateDecompressorTest extends TestCase
 
     public function testInflateBig()
     {
-        if (defined('HHVM_VERSION')) $this->markTestSkipped('Not supported on HHVM (final chunk will not be emitted)');
-
         $this->decompressor->on('data', function ($data) use (&$buffered) {
             $buffered .= $data;
         });
@@ -52,7 +50,7 @@ class ZlibFilterDeflateDecompressorTest extends TestCase
 
     public function testInflateInvalid()
     {
-        if (!defined('HHVM_VERSION')) $this->markTestSkipped('Only supported on HHVM (other engines do not reject invalid data)');
+        $this->markTestSkipped('Not supported by any PHP version (neither does reject invalid data)');
 
         $this->decompressor->on('data', $this->expectCallableNever());
         $this->decompressor->on('error', $this->expectCallableOnce());

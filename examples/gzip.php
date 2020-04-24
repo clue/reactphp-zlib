@@ -8,7 +8,7 @@ if (DIRECTORY_SEPARATOR === '\\') {
 }
 
 if (!defined('ZLIB_ENCODING_GZIP')) {
-    fwrite(STDERR, 'Requires PHP 5.4+ with ext-zlib enabled' . PHP_EOL);
+    fwrite(STDERR, 'Requires PHP with ext-zlib enabled' . PHP_EOL);
     exit(1);
 }
 
