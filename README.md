@@ -15,7 +15,6 @@ supporting compression and decompression of GZIP, ZLIB and raw DEFLATE formats.
 * [Usage](#usage)
     * [Compressor](#compressor)
     * [Decompressor](#decompressor)
-    * [Inconsistencies](#inconsistencies)
 * [Install](#install)
 * [Tests](#tests)
 * [License](#license)
@@ -162,17 +161,6 @@ $input->pipe($decompressor)->pipe($filterBadWords)->pipe($output);
 For more details, see ReactPHP's
 [`DuplexStreamInterface`](https://github.com/reactphp/stream#duplexstreaminterface).
 
-### Inconsistencies
-
-The stream compression filters are not exactly the most commonly used features of PHP.
-As such, we've spotted some inconsistencies (or *bugs*) in different PHP versions.
-These inconsistencies exist in the underlying PHP engines and there's little we can do about this in this library.
-
-* All PHP versions: Decompressing invalid data does not emit any data (and does not raise an error)
-
-Our test suite contains several test cases that exhibit these issues.
-If you feel some test case is missing or outdated, we're happy to accept PRs! :)
-
 ## Install
 
 The recommended way to install this library is [through Composer](https://getcomposer.org).
@@ -188,9 +176,7 @@ $ composer require clue/zlib-react:^0.2.2
 See also the [CHANGELOG](CHANGELOG.md) for details about version upgrades.
 
 This project aims to run on any platform and thus does not require any PHP
-extensions besides `ext-zlib` and supports running on legacy PHP 5.4 through current
-PHP 7+.
-It's *highly recommended to use PHP 7+* for this project.
+extensions besides `ext-zlib` and supports running on current PHP 7+.
 
 The `ext-zlib` extension is required for handling the underlying data compression
 and decompression.
@@ -200,8 +186,8 @@ builds by default. If you're building PHP from source, you may have to
 [manually enable](https://www.php.net/manual/en/zlib.installation.php) it.
 
 We're committed to providing a smooth upgrade path for legacy setups.
-If you need to support legacy PHP 5.3 and legacy HHVM, you may want to check out
-the legacy `v0.2.x` release branch.
+If you need to support legacy PHP versions and legacy HHVM, you may want to
+check out the legacy `v0.2.x` release branch.
 This legacy release branch also provides an installation candidate that does not
 require `ext-zlib` during installation but uses runtime checks instead.
 

@@ -35,7 +35,8 @@ class TransformStream extends EventEmitter implements DuplexStreamInterface
 
             return true;
         } catch (Exception $e) {
-            $this->forwardError($e);
+            $this->emit('error', [$e]);
+            $this->close();
             return false;
         }
     }
@@ -53,7 +54,8 @@ class TransformStream extends EventEmitter implements DuplexStreamInterface
             }
             $this->transformEnd($data);
         } catch (Exception $e) {
-            $this->forwardError($e);
+            $this->emit('error', [$e]);
+            $this->close();
         }
     }
 
@@ -108,108 +110,48 @@ class TransformStream extends EventEmitter implements DuplexStreamInterface
     }
 
     /**
-     * Forwards a single "data" event to the reading side of the stream
-     *
-     * This will emit an "data" event.
-     *
-     * If the stream is not readable, then this is a NO-OP.
-     *
-     * @param string $data
-     */
-    protected function forwardData($data)
-    {
-        if (!$this->readable) {
-            return;
-        }
-        $this->emit('data', array($data));
-    }
-
-    /**
-     * Forwards an "end" event to the reading side of the stream
-     *
-     * This will emit an "end" event and will then close this stream.
-     *
-     * If the stream is not readable, then this is a NO-OP.
-     *
-     * @uses self::close()
-     */
-    protected function forwardEnd()
-    {
-        if (!$this->readable) {
-            return;
-        }
-        $this->readable = false;
-        $this->writable = false;
-
-        $this->emit('end');
-        $this->close();
-    }
-
-    /**
-     * Forwards the given $error message to the reading side of the stream
-     *
-     * This will emit an "error" event and will then close this stream.
-     *
-     * If the stream is not readable, then this is a NO-OP.
-     *
-     * @param Exception $error
-     * @uses self::close()
-     */
-    protected function forwardError(Exception $error)
-    {
-        if (!$this->readable) {
-            return;
-        }
-        $this->readable = false;
-        $this->writable = false;
-
-        $this->emit('error', array($error));
-        $this->close();
-    }
-
-    /**
      * can be overwritten in order to implement custom transformation behavior
      *
-     * This gets passed a single chunk of $data and should invoke `forwardData()`
+     * This gets passed a single chunk of $data and should emit a `data` event
      * with the filtered result.
      *
-     * If the given data chunk is not valid, then you should invoke `forwardError()`
-     * or throw an Exception.
+     * If the given data chunk is not valid, then you should throw an Exception
+     * which will automatically be turned into an `error` event.
      *
-     * If you do not overwrite this method, then its default implementation simply
-     * invokes `forwardData()` on the unmodified input data chunk.
+     * If you do not overwrite this method, then its default implementation
+     * simply emits a `data` event with the unmodified input data chunk.
      *
      * @param string $data
-     * @see self::forwardData()
      */
     protected function transformData($data)
     {
-        $this->forwardData($data);
+        $this->emit('data', [$data]);
     }
 
     /**
      * can be overwritten in order to implement custom stream ending behavior
      *
-     * This may get passed a single final chunk of $data and should invoke `forwardEnd()`.
+     * This may get passed a single final chunk of $data and should emit an
+     * `end` event and close the stream.
      *
-     * If the given data chunk is not valid, then you should invoke `forwardError()`
-     * or throw an Exception.
+     * If the given data chunk is not valid, then you should throw an Exception
+     * which will automatically be turned into an `error` event.
      *
      * If you do not overwrite this method, then its default implementation simply
      * invokes `transformData()` on the unmodified input data chunk (if any),
-     * which in turn defaults to invoking `forwardData()` and then finally
-     * invokes `forwardEnd()`.
+     * which in turn defaults to emitting a `data` event and then finally
+     * emits an `end` event and closes the stream.
      *
      * @param string $data
      * @see self::transformData()
-     * @see self::forwardData()
-     * @see self::forwardEnd()
      */
     protected function transformEnd($data)
     {
         if ($data !== '') {
             $this->transformData($data);
         }
-        $this->forwardEnd();
+
+        $this->emit('end');
+        $this->close();
     }
 }

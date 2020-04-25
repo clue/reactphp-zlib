@@ -31,18 +31,44 @@ use Clue\StreamFilter as Filter;
  * For more details, see ReactPHP's
  * [`DuplexStreamInterface`](https://github.com/reactphp/stream#duplexstreaminterface).
  */
-final class Compressor extends ZlibFilterStream
+final class Compressor extends TransformStream
 {
+    /** @var ?resource */
+    private $context;
+
     /**
      * @param int $encoding ZLIB_ENCODING_GZIP, ZLIB_ENCODING_RAW or ZLIB_ENCODING_DEFLATE
      * @param int $level    optional compression level
      */
     public function __construct($encoding, $level = -1)
     {
-        parent::__construct(
-            Filter\fun('zlib.deflate', array('window' => $encoding, 'level' => $level))
-        );
+        $context = @deflate_init($encoding, ['level' => $level]);
+        if ($context === false) {
+            throw new \InvalidArgumentException('Unable to initialize compressor' . strstr(error_get_last()['message'], ':'));
+        }
 
-        $this->emptyWrite = $encoding;
+        $this->context = $context;
+    }
+
+    protected function transformData($chunk)
+    {
+        $ret = deflate_add($this->context, $chunk, ZLIB_NO_FLUSH);
+
+        if ($ret !== '') {
+            $this->emit('data', [$ret]);
+        }
+    }
+
+    protected function transformEnd($chunk)
+    {
+        $ret = deflate_add($this->context, $chunk, ZLIB_FINISH);
+        $this->context = null;
+
+        if ($ret !== '') {
+            $this->emit('data', [$ret]);
+        }
+
+        $this->emit('end');
+        $this->close();
     }
 }
