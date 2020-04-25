@@ -1,5 +1,7 @@
 <?php
 
+namespace Clue\Tests\React\Zlib;
+
 class FunctionalExamplesTest extends TestCase
 {
     public function setUp()

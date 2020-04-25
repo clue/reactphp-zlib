@@ -1,5 +1,7 @@
 <?php
 
+namespace Clue\Tests\React\Zlib;
+
 use Clue\React\Zlib\Compressor;
 
 class DeflateCompressorTest extends TestCase
