@@ -1,5 +1,34 @@
 # Changelog
 
+## 1.0.0 (2020-05-28)
+
+*   Feature: Change `Compressor` and `Decompressor` to use more efficient streaming compression context.
+    (#28 by @clue)
+
+    This also fixes any inconsistencies and supports proper error reporting for invalid data.
+    Benchmark results suggest this improves both compression and decompression performance by ca. 25%.
+
+*   BC break: Require PHP 7+ with `ext-zlib` during installation and drop legacy PHP and legacy HHVM support.
+    (#25, 26 and #28 by @clue)
+
+    We're committed to providing a smooth upgrade path for legacy setups.
+    If you need to support legacy PHP versions and legacy HHVM, you may want to
+    check out the legacy `v0.2.x` release branch.
+    This legacy release branch also provides an installation candidate that does not
+    require `ext-zlib` during installation but uses runtime checks instead.
+    In this case, you can install this project like this:
+
+    ```bash
+    $ composer require "clue/zlib-react:^1.0||^0.2.2"
+    ```
+
+*   BC break: Remove deprecated APIs and mark `ZlibFilterStream` as internal only.
+    (#27 by @clue)
+
+*   Improve test suite by updating PHPUnit, clean up test suite and
+    add `.gitattributes` to exclude dev files from exports.
+    (#29 by @clue)
+
 ## 0.2.2 (2020-04-20)
 
 *   Feature: Add dedicated `Compressor` and `Decompressor` classes, deprecate `ZlibFilterStream`.

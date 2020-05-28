@@ -3,10 +3,9 @@
 Streaming zlib compressor and decompressor for [ReactPHP](https://reactphp.org/),
 supporting compression and decompression of GZIP, ZLIB and raw DEFLATE formats.
 
-> Note: This project is in beta stage! Feel free to report any issues you encounter.
-
 **Table of contents**
 
+* [Support us](#support-us)
 * [Quickstart example](#quickstart-example)
 * [Formats](#formats)
     * [GZIP format](#gzip-format)
@@ -19,6 +18,16 @@ supporting compression and decompression of GZIP, ZLIB and raw DEFLATE formats.
 * [Tests](#tests)
 * [License](#license)
 * [More](#more)
+
+## Support us
+
+We invest a lot of time developing, maintaining and updating our awesome
+open-source projects. You can help us sustain this high-quality of our work by
+[becoming a sponsor on GitHub](https://github.com/sponsors/clue). Sponsors get
+numerous benefits in return, see our [sponsoring page](https://github.com/sponsors/clue)
+for details.
+
+Let's take these projects to the next level together! 🚀
 
 ## Quickstart example
 
@@ -166,11 +175,11 @@ For more details, see ReactPHP's
 The recommended way to install this library is [through Composer](https://getcomposer.org).
 [New to Composer?](https://getcomposer.org/doc/00-intro.md)
 
-While in beta, this project does not currently follow [SemVer](https://semver.org/).
+This project follows [SemVer](https://semver.org/).
 This will install the latest supported version:
 
 ```bash
-$ composer require clue/zlib-react:^0.2.2
+$ composer require clue/zlib-react:^1.0
 ```
 
 See also the [CHANGELOG](CHANGELOG.md) for details about version upgrades.
@@ -190,6 +199,11 @@ If you need to support legacy PHP versions and legacy HHVM, you may want to
 check out the legacy `v0.2.x` release branch.
 This legacy release branch also provides an installation candidate that does not
 require `ext-zlib` during installation but uses runtime checks instead.
+In this case, you can install this project like this:
+
+```bash
+$ composer require "clue/zlib-react:^1.0||^0.2.2"
+```
 
 ## Tests
 
