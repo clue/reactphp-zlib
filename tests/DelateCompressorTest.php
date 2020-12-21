@@ -8,7 +8,10 @@ class DeflateCompressorTest extends TestCase
 {
     private $compressor;
 
-    public function setUp()
+    /**
+     * @before
+     */
+    public function setUpCompressor()
     {
         $this->compressor = new Compressor(ZLIB_ENCODING_RAW);
     }

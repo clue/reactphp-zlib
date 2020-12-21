@@ -6,11 +6,9 @@ use Clue\React\Zlib\Compressor;
 
 class CompressorTest extends TestCase
 {
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testCtorThrowsForInvalidEncoding()
     {
+        $this->expectException('InvalidArgumentException');
         new Compressor(0);
     }
 }

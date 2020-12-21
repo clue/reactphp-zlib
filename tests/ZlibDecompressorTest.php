@@ -8,7 +8,10 @@ class ZlibDecompressorTest extends TestCase
 {
     private $decompressor;
 
-    public function setUp()
+    /**
+     * @before
+     */
+    public function setUpDecompressor()
     {
         $this->decompressor = new Decompressor(ZLIB_ENCODING_DEFLATE);
     }

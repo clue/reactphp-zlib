@@ -4,7 +4,10 @@ namespace Clue\Tests\React\Zlib;
 
 class FunctionalExamplesTest extends TestCase
 {
-    public function setUp()
+    /**
+     * @before
+     */
+    public function setUpSkipTest()
     {
         if (DIRECTORY_SEPARATOR === '\\') {
             $this->markTestSkipped('Non-blocking console I/O not supported on Windows');
