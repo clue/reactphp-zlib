@@ -187,7 +187,7 @@ $ composer require clue/zlib-react:^1.0
 See also the [CHANGELOG](CHANGELOG.md) for details about version upgrades.
 
 This project aims to run on any platform and thus does not require any PHP
-extensions besides `ext-zlib` and supports running on current PHP 7+.
+extensions besides `ext-zlib` and supports running on PHP 7 through current PHP 8+.
 
 The `ext-zlib` extension is required for handling the underlying data compression
 and decompression.
