@@ -174,14 +174,14 @@ For more details, see ReactPHP's
 
 ## Install
 
-The recommended way to install this library is [through Composer](https://getcomposer.org).
+The recommended way to install this library is [through Composer](https://getcomposer.org/).
 [New to Composer?](https://getcomposer.org/doc/00-intro.md)
 
 This project follows [SemVer](https://semver.org/).
 This will install the latest supported version:
 
 ```bash
-$ composer require clue/zlib-react:^1.0
+$ composer require clue/zlib-react:^1.1
 ```
 
 See also the [CHANGELOG](CHANGELOG.md) for details about version upgrades.
@@ -210,7 +210,7 @@ $ composer require "clue/zlib-react:^1.0||^0.2.2"
 ## Tests
 
 To run the test suite, you first need to clone this repo and then install all
-dependencies [through Composer](https://getcomposer.org):
+dependencies [through Composer](https://getcomposer.org/):
 
 ```bash
 $ composer install
@@ -232,6 +232,7 @@ This project is released under the permissive [MIT license](LICENSE).
 ## More
 
 * If you want to learn more about processing streams of data, refer to the documentation of
-  the underlying [react/stream](https://github.com/reactphp/stream) component
+  the underlying [react/stream](https://github.com/reactphp/stream) component.
+
 * If you want to process compressed tarballs (`.tar.gz` and `.tgz` file extension), you may
   want to use [clue/reactphp-tar](https://github.com/clue/reactphp-tar) on the decompressed stream.

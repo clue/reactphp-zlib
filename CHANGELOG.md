@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.0 (2020-12-21)
+
+*   Feature: Add PHP 8 support and improve test suite.
+    Update to PHPUnit 9 and simplify test setup.
+    (#30 and #31 by @SimonFrings and #32 by @clue)
+
 ## 1.0.0 (2020-05-28)
 
 *   Feature: Change `Compressor` and `Decompressor` to use more efficient streaming compression context.
@@ -9,7 +15,7 @@
     Benchmark results suggest this improves both compression and decompression performance by ca. 25%.
 
 *   BC break: Require PHP 7+ with `ext-zlib` during installation and drop legacy PHP and legacy HHVM support.
-    (#25, 26 and #28 by @clue)
+    (#25, #26 and #28 by @clue)
 
     We're committed to providing a smooth upgrade path for legacy setups.
     If you need to support legacy PHP versions and legacy HHVM, you may want to
