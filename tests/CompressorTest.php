@@ -8,7 +8,7 @@ class CompressorTest extends TestCase
 {
     public function testCtorThrowsForInvalidEncoding()
     {
-        $this->expectException('InvalidArgumentException');
+        $this->expectException(PHP_VERSION_ID >= 80000 ? \ValueError::class : \InvalidArgumentException::class);
         new Compressor(0);
     }
 }
