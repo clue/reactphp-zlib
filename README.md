@@ -1,6 +1,7 @@
 # clue/reactphp-zlib
 
 [![CI status](https://github.com/clue/reactphp-zlib/workflows/CI/badge.svg)](https://github.com/clue/reactphp-zlib/actions)
+[![installs on Packagist](https://img.shields.io/packagist/dt/clue/zlib-react?color=blue&label=installs%20on%20Packagist)](https://packagist.org/packages/clue/zlib-react)
 
 Streaming zlib compressor and decompressor for [ReactPHP](https://reactphp.org/),
 supporting compression and decompression of GZIP, ZLIB and raw DEFLATE formats.
