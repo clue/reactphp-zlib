@@ -39,8 +39,7 @@ gzip file stream into an decompressor which emits decompressed data events for
 each individual log file chunk:
 
 ```php
-$loop = React\EventLoop\Factory::create();
-$stream = new React\Stream\ReadableResourceStream(fopen('access.log.gz', 'r'), $loop);
+$stream = new React\Stream\ReadableResourceStream(fopen('access.log.gz', 'r'));
 
 $decompressor = new Clue\React\Zlib\Decompressor(ZLIB_ENCODING_GZIP);
 $stream->pipe($decompressor);
@@ -48,8 +47,6 @@ $stream->pipe($decompressor);
 $decompressor->on('data', function ($data) {
     echo $data; // chunk of decompressed log data
 });
-
-$loop->run();
 ```
 
 See also the [examples](examples).

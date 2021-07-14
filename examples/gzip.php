@@ -7,12 +7,8 @@ if (DIRECTORY_SEPARATOR === '\\') {
     exit(1);
 }
 
-$loop = React\EventLoop\Factory::create();
-
-$in = new React\Stream\ReadableResourceStream(STDIN, $loop);
-$out = new React\Stream\WritableResourceStream(STDOUT, $loop);
+$in = new React\Stream\ReadableResourceStream(STDIN);
+$out = new React\Stream\WritableResourceStream(STDOUT);
 
 $compressor = new Clue\React\Zlib\Compressor(ZLIB_ENCODING_GZIP);
 $in->pipe($compressor)->pipe($out);
-
-$loop->run();
