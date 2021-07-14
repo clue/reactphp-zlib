@@ -7,10 +7,8 @@ if (DIRECTORY_SEPARATOR === '\\') {
     exit(1);
 }
 
-$loop = React\EventLoop\Factory::create();
-
-$in = new React\Stream\ReadableResourceStream(STDIN, $loop);
-$out = new React\Stream\WritableResourceStream(STDOUT, $loop);
+$in = new React\Stream\ReadableResourceStream(STDIN);
+$out = new React\Stream\WritableResourceStream(STDOUT);
 
 $decompressor = new Clue\React\Zlib\Decompressor(ZLIB_ENCODING_GZIP);
 $in->pipe($decompressor)->pipe($out);
@@ -18,5 +16,3 @@ $in->pipe($decompressor)->pipe($out);
 $decompressor->on('error', function ($e) {
     fwrite(STDERR, 'Error: ' . $e->getMessage() . PHP_EOL);
 });
-
-$loop->run();

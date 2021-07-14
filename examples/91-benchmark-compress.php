@@ -15,6 +15,8 @@
 //
 // $ dd if=/dev/zero bs=1M count=1k status=progress | gzip > /dev/null
 
+use React\EventLoop\Loop;
+
 require __DIR__ . '/../vendor/autoload.php';
 
 if (DIRECTORY_SEPARATOR === '\\') {
@@ -26,11 +28,9 @@ if (extension_loaded('xdebug')) {
     echo 'NOTICE: The "xdebug" extension is loaded, this has a major impact on performance.' . PHP_EOL;
 }
 
-$loop = React\EventLoop\Factory::create();
-
 // read 1 MiB * 1 Ki times
 $count = 0;
-$stream = new React\Stream\ReadableResourceStream(fopen('/dev/zero', 'r'), $loop, 1024*1024);
+$stream = new React\Stream\ReadableResourceStream(fopen('/dev/zero', 'r'), null, 1024*1024);
 $stream->on('data', function () use (&$count, $stream) {
     if (++$count > 1024) {
         $stream->close();
@@ -47,17 +47,15 @@ $stream->on('data', function ($chunk) use (&$bytes) {
 });
 
 // report progress periodically
-$timer = $loop->addPeriodicTimer(0.05, function () use (&$bytes) {
+$timer = Loop::addPeriodicTimer(0.05, function () use (&$bytes) {
     echo "\rCompressed $bytes bytes…";
 });
 
 // report results once the stream closes
 $start = microtime(true);
-$stream->on('close', function () use (&$bytes, $start, $loop, $timer) {
+$stream->on('close', function () use (&$bytes, $start, $timer) {
     $time = microtime(true) - $start;
-    $loop->cancelTimer($timer);
+    Loop::cancelTimer($timer);
 
     echo "\rCompressed $bytes bytes in " . round($time, 1) . 's => ' . round($bytes / $time / 1000000, 1) . ' MB/s' . PHP_EOL;
 });
-
-$loop->run();

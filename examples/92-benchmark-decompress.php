@@ -19,6 +19,8 @@
 //
 // $ php examples/gunzip.php < null.gz | dd of=/dev/zero status=progress
 
+use React\EventLoop\Loop;
+
 require __DIR__ . '/../vendor/autoload.php';
 
 if (DIRECTORY_SEPARATOR === '\\') {
@@ -35,9 +37,7 @@ if (extension_loaded('xdebug')) {
     echo 'NOTICE: The "xdebug" extension is loaded, this has a major impact on performance.' . PHP_EOL;
 }
 
-$loop = React\EventLoop\Factory::create();
-
-$in = new React\Stream\ReadableResourceStream(fopen($argv[1], 'r'), $loop);
+$in = new React\Stream\ReadableResourceStream(fopen($argv[1], 'r'));
 $stream = new Clue\React\Zlib\Decompressor(ZLIB_ENCODING_GZIP);
 $in->pipe($stream);
 
@@ -49,17 +49,15 @@ $stream->on('data', function ($chunk) use (&$bytes) {
 $stream->on('error', 'printf');
 
 //report progress periodically
-$timer = $loop->addPeriodicTimer(0.2, function () use (&$bytes) {
+$timer = Loop::addPeriodicTimer(0.2, function () use (&$bytes) {
     echo "\rDecompressed $bytes bytes…";
 });
 
 // show stats when stream ends
 $start = microtime(true);
-$stream->on('close', function () use (&$bytes, $start, $loop, $timer) {
+$stream->on('close', function () use (&$bytes, $start, $timer) {
     $time = microtime(true) - $start;
-    $loop->cancelTimer($timer);
+    Loop::cancelTimer($timer);
 
     echo "\rDecompressed $bytes bytes in " . round($time, 1) . 's => ' . round($bytes / $time / 1000000, 1) . ' MB/s' . PHP_EOL;
 });
-
-$loop->run();
