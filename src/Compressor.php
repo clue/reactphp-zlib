@@ -42,9 +42,25 @@ final class Compressor extends TransformStream
      */
     public function __construct($encoding, $level = -1)
     {
-        $context = @deflate_init($encoding, ['level' => $level]);
+        $errstr = '';
+        set_error_handler(function ($_, $error) use (&$errstr) {
+            // Match errstr from PHP's warning message.
+            // inflate_init(): encoding mode must be ZLIB_ENCODING_RAW, ZLIB_ENCODING_GZIP or ZLIB_ENCODING_DEFLATE
+            $errstr = strstr($error, ':'); // @codeCoverageIgnore
+        });
+
+        try {
+            $context = deflate_init($encoding, ['level' => $level]);
+        } catch (\ValueError $e) { // @codeCoverageIgnoreStart
+            // Throws ValueError on PHP 8.0+
+            restore_error_handler();
+            throw $e;
+        } // @codeCoverageIgnoreEnd
+
+        restore_error_handler();
+
         if ($context === false) {
-            throw new \InvalidArgumentException('Unable to initialize compressor' . strstr(error_get_last()['message'], ':'));
+            throw new \InvalidArgumentException('Unable to initialize compressor' . $errstr); // @codeCoverageIgnore
         }
 
         $this->context = $context;

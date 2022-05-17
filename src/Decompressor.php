@@ -41,9 +41,25 @@ final class Decompressor extends TransformStream
      */
     public function __construct($encoding)
     {
-        $context = @inflate_init($encoding);
+        $errstr = '';
+        set_error_handler(function ($_, $error) use (&$errstr) {
+            // Match errstr from PHP's warning message.
+            // inflate_init(): encoding mode must be ZLIB_ENCODING_RAW, ZLIB_ENCODING_GZIP or ZLIB_ENCODING_DEFLATE
+            $errstr = strstr($error, ':'); // @codeCoverageIgnore
+        });
+
+        try {
+            $context = inflate_init($encoding);
+        } catch (\ValueError $e) { // @codeCoverageIgnoreStart
+            // Throws ValueError on PHP 8.0+
+            restore_error_handler();
+            throw $e;
+        } // @codeCoverageIgnoreEnd
+
+        restore_error_handler();
+
         if ($context === false) {
-            throw new \InvalidArgumentException('Unable to initialize decompressor' . strstr(error_get_last()['message'], ':'));
+            throw new \InvalidArgumentException('Unable to initialize decompressor' . $errstr); // @codeCoverageIgnore
         }
 
         $this->context = $context;
@@ -51,9 +67,19 @@ final class Decompressor extends TransformStream
 
     protected function transformData($chunk)
     {
-        $ret = @inflate_add($this->context, $chunk);
+        $errstr = '';
+        set_error_handler(function ($_, $error) use (&$errstr) {
+            // Match errstr from PHP's warning message.
+            // inflate_add(): data error
+            $errstr = strstr($error, ':');
+        });
+
+        $ret = inflate_add($this->context, $chunk);
+
+        restore_error_handler();
+
         if ($ret === false) {
-            throw new \RuntimeException('Unable to decompress' . strstr(error_get_last()['message'], ':'));
+            throw new \RuntimeException('Unable to decompress' . $errstr);
         }
 
         if ($ret !== '') {
@@ -63,11 +89,20 @@ final class Decompressor extends TransformStream
 
     protected function transformEnd($chunk)
     {
-        $ret = @inflate_add($this->context, $chunk, ZLIB_FINISH);
+        $errstr = '';
+        set_error_handler(function ($_, $error) use (&$errstr) {
+            // Match errstr from PHP's warning message.
+            // inflate_add(): data error
+            $errstr = strstr($error, ':');
+        });
+
+        $ret = inflate_add($this->context, $chunk, ZLIB_FINISH);
         $this->context = null;
 
+        restore_error_handler();
+
         if ($ret === false) {
-            throw new \RuntimeException('Unable to decompress' . strstr(error_get_last()['message'], ':'));
+            throw new \RuntimeException('Unable to decompress' . $errstr);
         }
 
         if ($ret !== '') {
