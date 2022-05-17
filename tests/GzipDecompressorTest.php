@@ -53,19 +53,35 @@ class GzipDecompressorTest extends TestCase
         $this->assertEquals($data, $buffered);
     }
 
-    public function testDecompressInvalidDataEmitsError()
+    public function testDecompressInvalidDataEmitsErrorWithoutCallingCustomErrorHandler()
     {
         $this->decompressor->on('data', $this->expectCallableNever());
         $this->decompressor->on('error', $this->expectCallableOnce());
+
+        $error = null;
+        set_error_handler(function ($_, $errstr) use (&$error) {
+            $error = $errstr;
+        });
 
         $this->decompressor->write('invalid');
+
+        restore_error_handler();
+        $this->assertNull($error);
     }
 
-    public function testDecompressInvalidOnEndEmitsError()
+    public function testDecompressInvalidOnEndEmitsErrorWithoutCallingCustomErrorHandler()
     {
         $this->decompressor->on('data', $this->expectCallableNever());
         $this->decompressor->on('error', $this->expectCallableOnce());
 
+        $error = null;
+        set_error_handler(function ($_, $errstr) use (&$error) {
+            $error = $errstr;
+        });
+
         $this->decompressor->end('invalid');
+
+        restore_error_handler();
+        $this->assertNull($error);
     }
 }
