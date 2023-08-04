@@ -1,6 +1,6 @@
 # clue/reactphp-zlib
 
-[![CI status](https://github.com/clue/reactphp-zlib/workflows/CI/badge.svg)](https://github.com/clue/reactphp-zlib/actions)
+[![CI status](https://github.com/clue/reactphp-zlib/actions/workflows/ci.yml/badge.svg)](https://github.com/clue/reactphp-zlib/actions)
 [![installs on Packagist](https://img.shields.io/packagist/dt/clue/zlib-react?color=blue&label=installs%20on%20Packagist)](https://packagist.org/packages/clue/zlib-react)
 
 Streaming zlib compressor and decompressor for [ReactPHP](https://reactphp.org/),
@@ -54,7 +54,7 @@ See also the [examples](examples).
 ## Formats
 
 This library is a lightweight wrapper around the underlying zlib library.
-The zlib library offers a number of different formats (sometimes referred to as *encodings*) detailled below.
+The zlib library offers a number of different formats (sometimes referred to as *encodings*) detailed below.
 
 ### GZIP format
 
@@ -179,13 +179,14 @@ This project follows [SemVer](https://semver.org/).
 This will install the latest supported version:
 
 ```bash
-$ composer require clue/zlib-react:^1.1
+composer require clue/zlib-react:^1.1
 ```
 
 See also the [CHANGELOG](CHANGELOG.md) for details about version upgrades.
 
 This project aims to run on any platform and thus does not require any PHP
 extensions besides `ext-zlib` and supports running on PHP 7 through current PHP 8+.
+It's *highly recommended to use the latest supported PHP version* for this project.
 
 The `ext-zlib` extension is required for handling the underlying data compression
 and decompression.
@@ -202,7 +203,7 @@ require `ext-zlib` during installation but uses runtime checks instead.
 In this case, you can install this project like this:
 
 ```bash
-$ composer require "clue/zlib-react:^1.0||^0.2.2"
+composer require "clue/zlib-react:^1.0||^0.2.2"
 ```
 
 ## Tests
@@ -211,13 +212,13 @@ To run the test suite, you first need to clone this repo and then install all
 dependencies [through Composer](https://getcomposer.org/):
 
 ```bash
-$ composer install
+composer install
 ```
 
 To run the test suite, go to the project root and run:
 
 ```bash
-$ php vendor/bin/phpunit
+vendor/bin/phpunit
 ```
 
 ## License
