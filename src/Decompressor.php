@@ -2,8 +2,6 @@
 
 namespace Clue\React\Zlib;
 
-use Clue\StreamFilter as Filter;
-
 /**
  * The `Decompressor` class can be used to decompress a stream of data.
  *

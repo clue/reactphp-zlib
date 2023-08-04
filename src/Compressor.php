@@ -2,8 +2,6 @@
 
 namespace Clue\React\Zlib;
 
-use Clue\StreamFilter as Filter;
-
 /**
  * The `Compressor` class can be used to compress a stream of data.
  *
