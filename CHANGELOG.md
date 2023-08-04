@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.2.0 (2023-08-04)
+
+*   Feature: Improve error reporting when custom error handler is used.
+    (#35 by @SimonFrings)
+
+*   Improve documentation and simplify examples by updating to new default loop.
+    (#34 by @clue, #37 by @SimonFrings and #33 by @PaulRotmann)
+
+*   Improve test suite, test against PHP 8.2 and update test environment.
+    (#36 and #38 by @SimonFrings)
+
 ## 1.1.0 (2020-12-21)
 
 *   Feature: Add PHP 8 support and improve test suite.
