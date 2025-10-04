@@ -30,4 +30,10 @@ class CompressorTest extends TestCase
 
         $this->assertEquals($handler, $checkHandler);
     }
+
+    public function testCtorThrowsForInvalidFlushMode()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        new Compressor(ZLIB_ENCODING_GZIP, -1, -1);
+    }
 }

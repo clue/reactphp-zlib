@@ -34,11 +34,15 @@ final class Compressor extends TransformStream
     /** @var ?resource */
     private $context;
 
+    /** @var int */
+    private $flush;
+
     /**
      * @param int $encoding ZLIB_ENCODING_GZIP, ZLIB_ENCODING_RAW or ZLIB_ENCODING_DEFLATE
      * @param int $level    optional compression level
+     * @param int $flush    optional flush mode (ZLIB_NO_FLUSH, ZLIB_SYNC_FLUSH, ZLIB_FULL_FLUSH, ZLIB_FINISH)
      */
-    public function __construct($encoding, $level = -1)
+    public function __construct($encoding, $level = -1, int $flush = ZLIB_NO_FLUSH)
     {
         $errstr = '';
         set_error_handler(function ($_, $error) use (&$errstr) {
@@ -61,12 +65,17 @@ final class Compressor extends TransformStream
             throw new \InvalidArgumentException('Unable to initialize compressor' . $errstr); // @codeCoverageIgnore
         }
 
+        if (!in_array($flush, [ZLIB_NO_FLUSH, ZLIB_SYNC_FLUSH, ZLIB_FULL_FLUSH, ZLIB_FINISH], true)) {
+            throw new \InvalidArgumentException('Argument #3 ($flush) must be one of ZLIB_NO_FLUSH, ZLIB_SYNC_FLUSH, ZLIB_FULL_FLUSH or ZLIB_FINISH');
+        }
+
         $this->context = $context;
+        $this->flush = $flush;
     }
 
     protected function transformData($chunk)
     {
-        $ret = deflate_add($this->context, $chunk, ZLIB_NO_FLUSH);
+        $ret = deflate_add($this->context, $chunk, $this->flush);
 
         if ($ret !== '') {
             $this->emit('data', [$ret]);
