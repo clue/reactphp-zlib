@@ -67,6 +67,15 @@ class GzipCompressorTest extends TestCase
         $compressor->write('hello');
     }
 
+    public function testWriteWithPartialFlushWillFlushHeaderWithFirstChunkImmediately()
+    {
+        $compressor = new Compressor(ZLIB_ENCODING_GZIP, -1, ZLIB_PARTIAL_FLUSH);
+
+        $compressor->on('data', $this->expectCallableOnceWith("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00" . $this->os . "\xca\x48\xcd\xc9\xc9\x07\x08"));
+
+        $compressor->write('hello');
+    }
+
     public function testWriteWithSyncFlushWillFlushHeaderWithFirstChunkImmediately()
     {
         $compressor = new Compressor(ZLIB_ENCODING_GZIP, -1, ZLIB_SYNC_FLUSH);
@@ -76,21 +85,12 @@ class GzipCompressorTest extends TestCase
         $compressor->write('hello');
     }
 
-    public function testWriteWithFinishFlushWillFlushEntireGzipHeaderAndFooterWithFirstChunkImmediately()
+    public function testWriteAfterWriteWithFullFlushWillFlushChunkIndependentOfPreviousChunk()
     {
-        $compressor = new Compressor(ZLIB_ENCODING_GZIP, -1, ZLIB_FINISH);
-
-        $compressor->on('data', $this->expectCallableOnceWith("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00" . $this->os . "\xcb\x48\xcd\xc9\xc9\x07\x00\x86\xa6\x10\x36" . "\x05\x00\x00\x00"));
-
-        $compressor->write('hello');
-    }
-
-    public function testWriteAfterFinishFlushWillFlushEntireGzipWithSyncFlushWillFlushEntireGzipHeaderAndFooterAgainImmediately()
-    {
-        $compressor = new Compressor(ZLIB_ENCODING_GZIP, -1, ZLIB_FINISH);
+        $compressor = new Compressor(ZLIB_ENCODING_GZIP, -1, ZLIB_FULL_FLUSH);
         $compressor->write('hello');
 
-        $compressor->on('data', $this->expectCallableOnceWith("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00" . $this->os . "\xcb\x48\xcd\xc9\xc9\x07\x00\x86\xa6\x10\x36" . "\x05\x00\x00\x00"));
+        $compressor->on('data', $this->expectCallableOnceWith("\xca\x48\xcd\xc9\xc9\x07\x00\x00\x00\xff\xff"));
 
         $compressor->write('hello');
     }
