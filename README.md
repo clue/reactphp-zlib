@@ -1,6 +1,7 @@
 # clue/reactphp-zlib
 
 [![CI status](https://github.com/clue/reactphp-zlib/actions/workflows/ci.yml/badge.svg)](https://github.com/clue/reactphp-zlib/actions)
+[![code coverage](https://img.shields.io/badge/code%20coverage-100%25-success)](#tests)
 [![installs on Packagist](https://img.shields.io/packagist/dt/clue/zlib-react?color=blue&label=installs%20on%20Packagist)](https://packagist.org/packages/clue/zlib-react)
 
 Streaming zlib compressor and decompressor for [ReactPHP](https://reactphp.org/),
@@ -219,6 +220,14 @@ To run the test suite, go to the project root and run:
 
 ```bash
 vendor/bin/phpunit
+```
+
+The test suite is set up to always ensure 100% code coverage across all
+supported environments. If you have the Xdebug extension installed, you can also
+generate a code coverage report locally like this:
+
+```bash
+XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-text
 ```
 
 ## License
