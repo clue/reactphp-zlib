@@ -140,6 +140,25 @@ This is particularly useful in a piping context:
 $input->pipe($filterBadWords)->pipe($compressor)->pipe($output);
 ```
 
+This class takes an optional `int $level` parameter that controls the
+compression level from `0` (no compression) to `9` (best compression).
+It defaults to `-1` which uses zlib's default compression level.
+
+This class takes an optional `int $flush` parameter that controls when
+compressed data will be emitted. It defaults to `ZLIB_NO_FLUSH` which
+buffers data internally to achieve the best compression ratio, so compressed
+data is only emitted once enough data is available or the stream ends.
+For streaming protocols like EventSource (SSE), you can use `ZLIB_SYNC_FLUSH`
+to make sure each chunk can be decompressed by the receiving side immediately
+after writing. Each flush adds a few bytes, so this may produce larger output
+when writing many small chunks. This parameter also accepts `ZLIB_PARTIAL_FLUSH`
+and `ZLIB_FULL_FLUSH`, the latter also resets the compression state for each
+chunk, which may considerably increase output size.
+
+```php
+$compressor = new Clue\React\Zlib\Compressor(ZLIB_ENCODING_GZIP, -1, ZLIB_SYNC_FLUSH);
+```
+
 For more details, see ReactPHP's
 [`DuplexStreamInterface`](https://github.com/reactphp/stream#duplexstreaminterface).
 

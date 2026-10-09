@@ -34,6 +34,13 @@ class CompressorTest extends TestCase
     public function testCtorThrowsForInvalidFlushMode()
     {
         $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Argument #3 ($flush) must be one of ZLIB_NO_FLUSH, ZLIB_PARTIAL_FLUSH, ZLIB_SYNC_FLUSH or ZLIB_FULL_FLUSH');
         new Compressor(ZLIB_ENCODING_GZIP, -1, -1);
+    }
+
+    public function testCtorThrowsForFinishFlushMode()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        new Compressor(ZLIB_ENCODING_GZIP, -1, ZLIB_FINISH);
     }
 }
