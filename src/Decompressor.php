@@ -34,6 +34,9 @@ final class Decompressor extends TransformStream
     /** @var ?resource */
     private $context;
 
+    /** @var bool */
+    private $incomplete = false;
+
     /**
      * @param int $encoding ZLIB_ENCODING_GZIP, ZLIB_ENCODING_RAW or ZLIB_ENCODING_DEFLATE
      */
@@ -80,6 +83,9 @@ final class Decompressor extends TransformStream
             throw new \RuntimeException('Unable to decompress' . $errstr);
         }
 
+        // detect incomplete data on PHP 7.2+ only, older versions lack inflate_get_status()
+        $this->incomplete = PHP_VERSION_ID >= 70200 && inflate_get_status($this->context) !== ZLIB_STREAM_END;
+
         if ($ret !== '') {
             $this->emit('data', [$ret]);
         }
@@ -87,24 +93,14 @@ final class Decompressor extends TransformStream
 
     protected function transformEnd($chunk)
     {
-        $errstr = '';
-        set_error_handler(function ($_, $error) use (&$errstr) {
-            // Match errstr from PHP's warning message.
-            // inflate_add(): data error
-            $errstr = strstr($error, ':');
-        });
-
-        $ret = inflate_add($this->context, $chunk, ZLIB_FINISH);
-        $this->context = null;
-
-        restore_error_handler();
-
-        if ($ret === false) {
-            throw new \RuntimeException('Unable to decompress' . $errstr);
+        if ($chunk !== '') {
+            $this->transformData($chunk);
         }
 
-        if ($ret !== '') {
-            $this->emit('data', [$ret]);
+        $this->context = null;
+
+        if ($this->incomplete) {
+            throw new \RuntimeException('Unable to decompress: unexpected end of stream'); // @codeCoverageIgnore
         }
 
         $this->emit('end');
