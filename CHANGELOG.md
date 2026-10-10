@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.3.0 (2026-10-10)
+
+*   Feature: Add new `$flush` parameter to control flush mode for `Compressor`.
+    (#41 and #45 by @clue)
+
+    ```php
+    // flush after each write for streaming protocols like EventSource (SSE)
+    $compressor = new Clue\React\Zlib\Compressor(ZLIB_ENCODING_GZIP, -1, ZLIB_SYNC_FLUSH);
+    ```
+
+*   Feature / Fix: Improve error reporting for incomplete data in `Decompressor`.
+    (#46 by @clue)
+
+*   Improve PHP 8.5+ and PHP 8.4+ support and update test environment.
+    (#40 and #43 by @clue)
+
+*   Improve test suite to ensure 100% code coverage and support legacy PHP 7.2 with PHPUnit 8.5.
+    (#42 and #44 by @clue)
+
 ## 1.2.0 (2023-08-04)
 
 *   Feature: Improve error reporting when custom error handler is used.
