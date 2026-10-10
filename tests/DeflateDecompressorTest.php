@@ -24,6 +24,14 @@ class DeflateDecompressorTest extends TestCase
         $this->decompressor->end(gzdeflate(''));
     }
 
+    public function testInflateWithoutDataEmitsEnd()
+    {
+        $this->decompressor->on('error', $this->expectCallableNever());
+        $this->decompressor->on('end', $this->expectCallableOnce());
+
+        $this->decompressor->end();
+    }
+
     public function testInflateHelloWorld()
     {
         $this->decompressor->on('data', function ($data) use (&$buffered) {
@@ -83,5 +91,18 @@ class DeflateDecompressorTest extends TestCase
 
         restore_error_handler();
         $this->assertNull($error);
+    }
+
+    public function testDecompressTruncatedDataOnEndEmitsError()
+    {
+        if (PHP_VERSION_ID < 70200) {
+            $this->markTestSkipped('Requires PHP 7.2+ to detect incomplete data');
+        }
+
+        $this->decompressor->on('end', $this->expectCallableNever());
+        $this->decompressor->on('error', $this->expectCallableOnce());
+
+        $this->decompressor->write(substr(gzdeflate('hello world'), 0, -1));
+        $this->decompressor->end();
     }
 }
